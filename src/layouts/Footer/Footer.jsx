@@ -103,9 +103,9 @@ const Footer = () => {
             <Typography variant="h6" sx={{ fontSize: { xs: "1rem", md: "1.25rem" }, textAlign: "center" ,color:"orange"}}>
               Kəşf edin
             </Typography>
-            <NavLink style={{color:"orange", textDecoration: "none", color: "orange", whiteSpace: "normal", wordWrap: "break-word" }} to="#">Tasker Ol</NavLink>
-            <NavLink style={{color:"orange", textDecoration: "none", color: "orange" }} to="#">Şəhər Üzrə Xidmətlər</NavLink>
-            <NavLink style={{color:"orange", textDecoration: "none", color: "orange" }} to="#">Yaxınlıqdakı Xidmətlər</NavLink>
+            <NavLink style={{color:"orange", textDecoration: "none",  whiteSpace: "normal", wordWrap: "break-word" }} to="#">Tasker Ol</NavLink>
+            <NavLink style={{color:"orange", textDecoration: "none",  }} to="#">Şəhər Üzrə Xidmətlər</NavLink>
+            <NavLink style={{color:"orange", textDecoration: "none",  }} to="#">Yaxınlıqdakı Xidmətlər</NavLink>
           </Box>
 
           {/* Sağ hissə */}

@@ -1,107 +1,136 @@
-import * as React from 'react';
-import { useColorScheme } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Typography from '@mui/joy/Typography';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Button from '@mui/joy/Button';
-import Link from '@mui/joy/Link';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
+import * as React from "react";
+import { TextField, Button, Typography, Container, Box } from "@mui/material";
+import { NavLink, useNavigate } from "react-router-dom";
+import { styled } from "@mui/system";
+import GoogleIcon from "@mui/icons-material/Google"; // Google İkonu
+import { login } from "../../../../../Server/features/authSlice"; // Redux login action
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useEffect } from "react";
+import style from "./Login.module.css"
+const StyledTextField = styled(TextField)({
+  "& input": {
+    padding: "18px",
+    fontSize: "18px",
+  },
+});
+
+const StyledButton = styled(Button)({
+  fontSize: "18px",
+  padding: "14px",
+  borderRadius: "10px",
+});
+
 const Login = () => {
-    const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const { isAuthenticated,loading, error } = useSelector((state) => state.auth); // Redux auth state
+  const navigate = useNavigate();
+useEffect(()=>{console.log("isAuth:",isAuthenticated)
 
-  // necessary for server-side rendering
-  // because mode is undefined on the server
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) {
-    return <Button variant="soft">Change mode</Button>;
+  if(isAuthenticated){
+    navigate("/")
   }
-  function ModeToggle() {
-    const { mode, setMode } = useColorScheme();
-    const [mounted, setMounted] = React.useState(false);
-  
-    // necessary for server-side rendering
-    // because mode is undefined on the server
-    React.useEffect(() => {
-      setMounted(true);
-    }, []);
-    if (!mounted) {
-      return <Button variant="soft">Change mode</Button>;
+},[isAuthenticated,navigate])
+  // ✅ Düzəliş olunmuş handleSubmit funksiyası
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(login({email, password})).then((result) => {
+        console.log("Login nəticəsi:", result); // Debug üçün
+        if (result?.payload) {
+          navigate("/"); // Uğurlu olduqda yönləndir
+        } else {
+          console.error("Login uğursuz oldu:", result);
+        }
+      });
+    } catch (err) {
+      console.error("Xəta baş verdi:", err);
     }
-  
-    return (
-      <Select
-        variant="soft"
-        value={mode}
-        onChange={(event, newMode) => {
-          setMode(newMode);
-        }}
-        sx={{ width: 'max-content' }}
-      >
-        <Option value="system">System</Option>
-        <Option value="light">Light</Option>
-        <Option value="dark">Dark</Option>
-      </Select>
-    );
-  }
-  return (
-<main>
-      <ModeToggle />
-      <CssBaseline />
-      <Sheet
-        sx={{
-          width: 300,
-          mx: 'auto', // margin left & right
-          my: 4, // margin top & bottom
-          py: 3, // padding top & bottom
-          px: 2, // padding left & right
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          borderRadius: 'sm',
-          boxShadow: 'md',
-        }}
-        variant="outlined"
-      >
-        <div>
-          <Typography level="h4" component="h1">
-            <b>Welcome!</b>
-          </Typography>
-          <Typography level="body-sm">Sign in to continue.</Typography>
-        </div>
-        <FormControl>
-          <FormLabel>Email</FormLabel>
-          <Input
-            // html input attribute
-            name="email"
-            type="email"
-            placeholder="johndoe@email.com"
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Password</FormLabel>
-          <Input
-            // html input attribute
-            name="password"
-            type="password"
-            placeholder="password"
-          />
-        </FormControl>
-        <Button sx={{ mt: 1 /* margin top */ }}>Log in</Button>
-        <Typography
-          endDecorator={<Link href="/sign-up">Sign up</Link>}
-          sx={{ fontSize: 'sm', alignSelf: 'center' }}
-        >
-          Don&apos;t have an account?
-        </Typography>
-      </Sheet>
-    </main>  )
-}
+  };
 
-export default Login
+  // Google login
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:8080/auth/google","_self")
+  };
+
+  return (<div  className={style.Medium}>
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: 5,
+          backgroundColor: "white",
+          borderRadius: 3,
+          boxShadow: 4,
+          width: "100%",
+          maxWidth: "550px",
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+          Xoş Gəlmişsiniz!
+        </Typography>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <StyledTextField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            required
+          />
+          <StyledTextField
+            label="Password"
+            type="password"
+            value={password}
+            fullWidth
+            onChange={(e) => setPassword(e.target.value)}
+            variant="outlined"
+            margin="normal"
+            required
+          />
+          <NavLink to="/reset">forget Password?</NavLink>
+          <StyledButton fullWidth variant="contained" color="primary" sx={{ mt: 3 }} type="submit">
+            Log In
+          </StyledButton>
+
+          <StyledButton
+            fullWidth
+            variant="outlined"
+            color="inherit"
+            sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1 }}
+            onClick={handleGoogleLogin}
+          >
+            <GoogleIcon /> Google ilə Daxil ol
+          </StyledButton>
+
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            Hesabınız yoxdur?{" "}
+            <Button onClick={() => navigate("/signup")} sx={{ textTransform: "none", fontSize: "16px" }}>
+              Qeydiyyat
+            </Button>
+          </Typography>
+        </form>
+      </Box>
+    </Container></div>
+  );
+};
+
+export default Login;

@@ -11,10 +11,19 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { logout } from '../../../../../Server/features/authSlice';
 import AdbIcon from '@mui/icons-material/Adb';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const Header = () => {
+  const dispatch=useDispatch()
+  const navigate=useNavigate()
+  const {isAuthenticated}=useSelector((state)=>state.auth)
+  const handleLogOut=()=>{
+    dispatch(logout())
+    navigate("/login")
+  }
     const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -84,10 +93,10 @@ const Header = () => {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
                 <MenuItem key={"Navbar"} onClick={handleCloseNavMenu} sx={{display:"flex",flexDirection:"column"}}>
-                  <NavLink style={{textDecoration:"none"}} to={"/signup"}><Typography sx={{ textAlign: 'center' }}>Qeydiyyatdan Keç</Typography></NavLink>
-                  <NavLink style={{textDecoration:"none"}} to={"login"}> <Typography sx={{ textAlign: 'center' }}>Daxil Ol</Typography></NavLink>
-                  <NavLink style={{textDecoration:"none"}} to={"/servislerimiz"}><Typography sx={{ textAlign: 'center' }}>Servislerimiz</Typography></NavLink>
-                  <NavLink style={{textDecoration:"none"}} to={"/ustaOl"}><Typography sx={{ textAlign: 'center' }}>Usta Qeydiyyatı</Typography></NavLink>
+                  <Button  onClick={()=>{if(!isAuthenticated){navigate("signup")}}} style={{textDecoration:"none"}} ><Typography sx={{ textAlign: 'center' }}>Qeydiyyatdan Keç</Typography></Button>
+                  <Button  onClick={()=>{if(!isAuthenticated){navigate("login")}}} style={{textDecoration:"none"}} ><Typography sx={{ textAlign: 'center' }}>Daxil Ol</Typography></Button>
+                  <Button  style={{textDecoration:"none"}} ><Typography sx={{ textAlign: 'center' }}>Servislerimiz</Typography></Button>
+                  <Button  style={{textDecoration:"none"}} ><Typography sx={{ textAlign: 'center' }}>Usta Qeydiyyatı</Typography></Button>
 
                 </MenuItem>
               
@@ -113,31 +122,33 @@ const Header = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <>
-              <NavLink style={{textDecoration:"none"}} to={"/signup"}><Button
+              
+              <Button
                 key={"Navbar"}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'black', display: 'block',my:4,mx:3}}
+                onClick={()=>{if(!isAuthenticated){navigate("signup")}}}
+                sx={{ color: 'black', display: 'block',my:4,mx:3}}
+                
               >
                 Qeydiyyatdan Keç
-              </Button></NavLink>
-              <NavLink style={{textDecoration:"none"}} to={"/login"}><Button
+              </Button>
+             <Button
               key={"Navbar"}
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'black', display: 'block',my:4,mx:3}}
+              onClick={()=>{if(!isAuthenticated){navigate("login")}}}
+              sx={{  color: 'black', display: 'block',my:4,mx:3}}
             >
               Daxil Ol
-            </Button></NavLink>
+            </Button>
             <NavLink style={{textDecoration:"none"}} to={"/servislərimiz"}><Button
             key={"Navbar"}
             onClick={handleCloseNavMenu}
-            sx={{ my: 2, color: 'black', display: 'block',my:4,mx:3}}
+            sx={{ color: 'black', display: 'block',my:4,mx:3}}
           >
            Servislərimiz
           </Button></NavLink>
           <NavLink style={{textDecoration:"none"}} to={"/signup"}><Button
           key={"Navbar"}
           onClick={handleCloseNavMenu}
-          sx={{ my: 2, color: 'black', display: 'block',my:4,mx:3}}
+          sx={{  color: 'black', display: 'block',my:4,mx:3}}
         >
           Usta Ol
         </Button></NavLink></>
@@ -165,11 +176,17 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                <MenuItem key="R" onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>Profilim</Typography>
                 </MenuItem>
-              ))}
+                <MenuItem key="R" onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>Parametrler</Typography>
+                </MenuItem><MenuItem  key="logout" onClick={handleLogOut}>
+                  <Typography sx={{ textAlign: 'center' }}>Cixis</Typography>
+                </MenuItem><MenuItem key="R" onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>Komek</Typography>
+                </MenuItem>
+              
             </Menu>
           </Box>
         </Toolbar>

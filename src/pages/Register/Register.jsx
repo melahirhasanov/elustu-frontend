@@ -1,97 +1,206 @@
-import * as React from 'react';
-import { useColorScheme } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Typography from '@mui/joy/Typography';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Button from '@mui/joy/Button';
-import Link from '@mui/joy/Link';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
+import React, { useState } from "react";
+import { TextField, Button, Typography, Container, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { styled } from "@mui/system";
+import GoogleIcon from "@mui/icons-material/Google"; // Google İkonu
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../../../../Server/features/authSlice";
+import axios from "axios";
 
-function ModeToggle() {
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
+const PhoneContainer = styled(Box)({
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
+  width: "100%",
+});
 
-  // necessary for server-side rendering
-  // because mode is undefined on the server
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) {
-    return <Button variant="soft">Change mode</Button>;
-  }
+const CountryButton = styled(Button)({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minWidth: "110px",
+  padding: "10px",
+  background: "#e0e0e0",
+  color: "black",
+  borderRadius: "8px",
+  fontWeight: "bold",
+  cursor: "default",
+  "&:hover": {
+    background: "#d6d6d6",
+  },
+});
+
+const PhoneInput = styled(TextField)({
+  flex: 1,
+  "& input": {
+    padding: "14px",
+    fontSize: "16px",
+  },
+});
+
+const Register = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+  });
+  const dispatch = useDispatch();
+  const { loading, error,isRegistered } = useSelector((state) => state.auth);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = () => {
+    navigate("/login");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(register(formData))
+      .then(() => {
+        if(!isRegistered){
+        navigate("/login")};
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+      });
+  };
+
+  const registerUser = async (userData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/register",
+        userData,
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      if(!isRegistered){
+      navigate("/login")};
+    } catch (error) {
+      console.error(error.response.data);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:8080/auth/google","_self")
+  };
 
   return (
-    <Select
-      variant="soft"
-      value={mode}
-      onChange={(event, newMode) => {
-        setMode(newMode);
+    <Container
+      component="main"
+      maxWidth="sm"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
       }}
-      sx={{ width: 'max-content' }}
     >
-      <Option value="system">System</Option>
-      <Option value="light">Light</Option>
-      <Option value="dark">Dark</Option>
-    </Select>
-  );
-}
-
-export default function Register() {
-  return (
-    <main>
-      <ModeToggle />
-      <CssBaseline />
-      <Sheet
+      <Box
         sx={{
-          width: 300,
-          mx: 'auto', // margin left & right
-          my: 4, // margin top & bottom
-          py: 3, // padding top & bottom
-          px: 2, // padding left & right
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          borderRadius: 'sm',
-          boxShadow: 'md',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: 4,
+          backgroundColor: "white",
+          borderRadius: 2,
+          boxShadow: 3,
+          width: "100%",
+          maxWidth: "450px",
         }}
-        variant="outlined"
       >
-        <div>
-          <Typography level="h4" component="h1">
-            <b>Welcome!</b>
-          </Typography>
-          <Typography level="body-sm">Sign in to continue.</Typography>
-        </div>
-        <FormControl>
-          <FormLabel>Email</FormLabel>
-          <Input
-            // html input attribute
-            name="email"
-            type="email"
-            placeholder="johndoe@email.com"
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel>Password</FormLabel>
-          <Input
-            // html input attribute
-            name="password"
-            type="password"
-            placeholder="password"
-          />
-        </FormControl>
-        <Button sx={{ mt: 1 /* margin top */ }}>Log in</Button>
-        <Typography
-          endDecorator={<Link href="/sign-up">Sign up</Link>}
-          sx={{ fontSize: 'sm', alignSelf: 'center' }}
-        >
-          Don&apos;t have an account?
+        <Typography variant="h5" component="h1" gutterBottom>
+          Istifadəçi Yarat
         </Typography>
-      </Sheet>
-    </main>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <TextField
+            name="username"
+            label="Username"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            required
+            onChange={handleChange}
+          />
+          <TextField
+            name="email"
+            label="Email"
+            type="email"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            required
+            onChange={handleChange}
+          />
+
+          {/* 📌 Telefon nömrəsi sahəsi */}
+          <PhoneContainer>
+            <CountryButton disableRipple>
+              <img
+                src="https://flagcdn.com/w40/az.png"
+                alt="Azerbaijan Flag"
+                style={{ width: "24px", marginRight: "6px" }}
+              />
+              +994
+            </CountryButton>
+
+            <PhoneInput
+              type="tel"
+              variant="outlined"
+              placeholder="50 123 45 67"
+              onChange={handleChange}
+              required
+              name="phoneNumber"
+            />
+          </PhoneContainer>
+
+          <TextField
+            name="password"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="outlined"
+            margin="normal"
+            required
+            onChange={handleChange}
+          />
+
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Registering..." : "Register"}
+          </Button>
+
+          {/* Google ilə qeydiyyat düyməsi */}
+          <Button
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1 }}
+            onClick={handleGoogleLogin}
+          >
+            <GoogleIcon /> Google ilə Qeydiyyat
+          </Button>
+
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            Already have an account?{" "}
+            <Button onClick={() => {navigate("/login")}} sx={{ textTransform: "none" }}>
+              Log In
+            </Button>
+          </Typography>
+        </form>
+      </Box>
+    </Container>
   );
-}
+};
+
+export default Register;

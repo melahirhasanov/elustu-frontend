@@ -123,7 +123,7 @@ export default function Masters() {
             {userPosition && " · yaxınlığa görə sıralanıb"}
           </Typography>
         </Box>
-        <Button component={RouterLink} to="/" variant="outlined" startIcon={<MapOutlinedIcon />} sx={{ bgcolor: "#fff" }}>
+        <Button component={RouterLink} to="/tap" variant="outlined" startIcon={<MapOutlinedIcon />} sx={{ bgcolor: "#fff" }}>
           Xəritədə bax
         </Button>
       </Stack>

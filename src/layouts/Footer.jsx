@@ -3,9 +3,9 @@ import { Link as RouterLink } from "react-router-dom";
 import { Logo } from "./Header";
 
 const LINKS = [
-  { label: "Xəritə", to: "/" },
+  { label: "Usta tap", to: "/tap" },
   { label: "Ustalar", to: "/ustalar" },
-  { label: "Haqqımızda", to: "/haqqimizda" },
+  { label: "Necə işləyir?", to: "/#nece-isleyir" },
   { label: "Usta kimi qoşul", to: "/qeydiyyat?rol=usta" },
   { label: "Daxil ol", to: "/giris" },
 ];

@@ -6,7 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MapHome from "./pages/MapHome";
 
 // Xəritə və chat ağır modullardır — yalnız açılanda yüklənir
-const About = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./pages/Home"));
 const Masters = lazy(() => import("./pages/Masters"));
 const Orders = lazy(() => import("./pages/Orders"));
 const MasterProfile = lazy(() => import("./pages/MasterProfile"));
@@ -39,7 +39,8 @@ export default function App() {
     <Suspense fallback={<Loading />}>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="haqqimizda" element={<About />} />
+          <Route index element={<Home />} />
+          <Route path="haqqimizda" element={<Navigate to="/#nece-isleyir" replace />} />
           <Route path="ustalar" element={<Masters />} />
           <Route path="usta/:id" element={<MasterProfile />} />
           <Route path="giris" element={<Login />} />
@@ -59,7 +60,7 @@ export default function App() {
 
         {/* Xəritə və chat bütün ekranı tutur, footer-siz */}
         <Route element={<MainLayout hideFooter />}>
-          <Route index element={<MapHome />} />
+          <Route path="tap" element={<MapHome />} />
           <Route element={<ProtectedRoute />}>
             <Route path="mesajlar" element={<Messages />} />
           </Route>

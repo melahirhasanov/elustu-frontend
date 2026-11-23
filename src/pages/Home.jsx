@@ -1,250 +1,325 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, Navigate, useLocation, useSearchParams } from "react-router-dom";
 import {
-  Box, Button, Card, CardActionArea, Chip, Container, Grid, InputAdornment, MenuItem,
-  Paper, Skeleton, Stack, TextField, Typography,
+  Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, Card, CardActionArea, Chip, Container,
+  Grid, Stack, Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import DirectionsCarFilledIcon from "@mui/icons-material/DirectionsCarFilled";
+import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
+import PhoneDisabledOutlinedIcon from "@mui/icons-material/PhoneDisabledOutlined";
+import RouteOutlinedIcon from "@mui/icons-material/RouteOutlined";
+import SensorsIcon from "@mui/icons-material/Sensors";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import api from "../api/client";
-import { CITIES, POPULAR_CATEGORIES } from "../constants/data";
+import { CATEGORIES, POPULAR_CATEGORIES } from "../constants/data";
 import CategoryIcon from "../components/CategoryIcon";
-import UserAvatar from "../components/UserAvatar";
+
+const FIND = "/tap";
+const findFor = (category) => `${FIND}?xidmet=${encodeURIComponent(category)}`;
 
 const STEPS = [
-  { icon: <SearchIcon />, title: "Axtarın", text: "Lazım olan xidməti və şəhəri seçin, siyahıda və ya xəritədə ustalara baxın." },
-  { icon: <ChatBubbleOutlineIcon />, title: "Yazışın", text: "Ustaya birbaşa mesaj yazın, işi və qiyməti əvvəlcədən razılaşdırın." },
-  { icon: <HowToRegOutlinedIcon />, title: "İşi həll edin", text: "Usta gəlir, işi görür. Hamısı vasitəçisiz və şəffaf." },
+  { icon: <EditNoteIcon />, title: "Problemi yaz", text: "“Kombi xəta verir”, “işıq sönüb” — öz sözlərinlə yaz, uyğun ustanı sistem özü tapır." },
+  { icon: <MyLocationIcon />, title: "Yerini seç", text: "Bir toxunuşla avtomatik və ya ünvanı yazaraq. Yalnız 20 km-dəki aktiv ustalar göstərilir." },
+  { icon: <StarRoundedIcon />, title: "Ustanı seç", text: "Reytinqə, rəylərə və real yol məsafəsinə bax. Yaz və ya saytdan zəng et." },
+  { icon: <DirectionsCarFilledIcon />, title: "Sifariş ver, izlə", text: "Usta qəbul edir, yola çıxır — gəlişini xəritədə canlı izləyirsən." },
 ];
 
-export default function Home() {
-  const navigate = useNavigate();
-  const [query, setQuery] = useState("");
-  const [city, setCity] = useState("");
-  const [masters, setMasters] = useState(null);
+const FEATURES = [
+  { icon: <VerifiedOutlinedIcon />, title: "Şəffaf reytinq", text: "Rəyi yalnız işi tamamlanmış müştəri yaza bilər. Hər ulduzun haradan gəldiyi görünür." },
+  { icon: <PhoneDisabledOutlinedIcon />, title: "Nömrən gizli qalır", text: "Ustaya saytdan zəng edirsən — telefon nömrəsi heç kimlə paylaşılmır." },
+  { icon: <RouteOutlinedIcon />, title: "Real məsafə", text: "Məsafə və vaxt quş uçuşu ilə yox, real yollarla hesablanır." },
+  { icon: <SensorsIcon />, title: "Canlı izləmə", text: "Usta yola çıxanda harada olduğunu və nə vaxt çatacağını görürsən." },
+];
 
+const FAQ = [
+  ["Əlüstü pulsuzdur?", "Bəli. Usta axtarmaq, yazışmaq, zəng etmək və sifariş vermək müştəri üçün tam pulsuzdur. İşin qiymətini usta ilə birbaşa razılaşırsan."],
+  ["Ödənişi necə edirəm?", "Ödəniş iş bitəndən sonra birbaşa ustaya edilir. Usta sifarişi qəbul edərkən təxmini qiyməti yazır, sürpriz olmur."],
+  ["Telefon nömrəm görünür?", "Xeyr. Zənglər sayt üzərindən gedir, yazışma da saytdadır — nə sənin, nə də ustanın nömrəsi paylaşılmır."],
+  ["Usta gəlməsə və ya iş pis olsa?", "Sifarişin içindən bir kliklə şikayət göndərə bilərsən — komanda araşdırır. Rəyin də ustanın reytinqinə təsir edir."],
+];
+
+function useStats() {
+  const [masters, setMasters] = useState(null);
   useEffect(() => {
     api.get("/api/master").then(({ data }) => setMasters(data)).catch(() => setMasters([]));
   }, []);
-
-  const countByCategory = useMemo(() => {
+  return useMemo(() => {
+    if (!masters) return null;
+    const active = masters.filter((m) => m.isAvailable !== false);
     const counts = {};
-    for (const m of masters || []) counts[m.category] = (counts[m.category] || 0) + 1;
-    return counts;
+    active.forEach((m) => (counts[m.category] = (counts[m.category] || 0) + 1));
+    return {
+      masters: masters.length,
+      active: active.length,
+      counts,
+    };
   }, [masters]);
+}
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (query.trim()) params.set("q", query.trim());
-    if (city) params.set("seher", city);
-    navigate(`/ustalar${params.toString() ? `?${params}` : ""}`);
-  };
+// Sağ tərəfdəki vizual: tətbiqdən kiçik "kəsiklər" (usta kartı, izləmə)
+function HeroVisual() {
+  const card = { bgcolor: "#fff", borderRadius: 4, boxShadow: "0 20px 50px rgba(15,23,42,.14)", border: 1, borderColor: "divider" };
+  return (
+    <Box sx={{ position: "relative", height: { xs: 330, md: 420 }, maxWidth: 440, mx: "auto" }}>
+      {/* xəritə fonu */}
+      <Box sx={{
+        position: "absolute", inset: { xs: "10px 20px 40px", md: "0 30px 60px" }, borderRadius: 6, overflow: "hidden",
+        background: "linear-gradient(135deg, #E2F3EE 0%, #F1F5F9 100%)", border: 1, borderColor: "divider",
+      }}>
+        <svg width="100%" height="100%" viewBox="0 0 300 320" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M-10 90 L310 130 M-10 230 L310 190 M70 -10 L110 330 M210 -10 L190 330" stroke="#fff" strokeWidth="14" fill="none" />
+          <path d="M-10 90 L310 130 M-10 230 L310 190 M70 -10 L110 330 M210 -10 L190 330" stroke="#CBD5E1" strokeWidth="1.5" fill="none" />
+          <path d="M200 70 C180 120 150 150 120 210" stroke="#0F766E" strokeWidth="4" strokeDasharray="8 7" fill="none" />
+          <circle cx="120" cy="212" r="11" fill="#0F172A" stroke="#fff" strokeWidth="4" />
+        </svg>
+        <Box sx={{
+          position: "absolute", left: "63%", top: "17%", width: 40, height: 40, borderRadius: "50%", bgcolor: "secondary.main",
+          display: "grid", placeItems: "center", border: "3px solid #fff", color: "#422006",
+          animation: "heroPulse 1.8s infinite", "@keyframes heroPulse": { "0%": { boxShadow: "0 0 0 0 rgba(245,158,11,.55)" }, "100%": { boxShadow: "0 0 0 18px rgba(245,158,11,0)" } },
+        }}>
+          <DirectionsCarFilledIcon sx={{ fontSize: 22 }} />
+        </Box>
+      </Box>
+
+      {/* usta kartı */}
+      <Box sx={{ ...card, position: "absolute", left: 0, bottom: { xs: 0, md: 10 }, width: { xs: 250, md: 280 }, p: 2 }}>
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Avatar sx={{ bgcolor: "primary.main", fontWeight: 800 }}>RH</Avatar>
+          <Box sx={{ minWidth: 0, flex: 1 }}>
+            <Typography variant="subtitle2" noWrap>Rauf H. · Kombi ustası</Typography>
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              <StarRoundedIcon sx={{ color: "secondary.main", fontSize: 18 }} />
+              <Typography variant="body2" sx={{ fontWeight: 700 }}>4.9</Typography>
+              <Typography variant="body2" color="text.secondary" noWrap>· 12 rəy · 2.1 km</Typography>
+            </Stack>
+          </Box>
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ mt: 1.5 }}>
+          <Chip size="small" icon={<CallOutlinedIcon />} label="Zəng" variant="outlined" />
+          <Chip size="small" icon={<ChatBubbleOutlineIcon />} label="Mesaj" variant="outlined" />
+          <Chip size="small" label="Sifariş" color="primary" />
+        </Stack>
+      </Box>
+
+      {/* izləmə bildirişi */}
+      <Box sx={{ ...card, position: "absolute", right: 0, top: { xs: 0, md: 24 }, px: 1.75, py: 1.25, display: "flex", alignItems: "center", gap: 1.25, bgcolor: "#FFFBEB" }}>
+        <SensorsIcon sx={{ color: "secondary.dark" }} />
+        <Box>
+          <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>Usta yoldadır</Typography>
+          <Typography variant="caption" color="text.secondary">~6 dəqiqəyə çatır</Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+export default function Home() {
+  const [params] = useSearchParams();
+  const stats = useStats();
+  const { hash } = useLocation();
+
+  // Başqa səhifədən "/#nece-isleyir" linki ilə gələndə həmin bölməyə sürüşdür
+  useEffect(() => {
+    if (!hash) return;
+    const t = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" }), 100);
+    return () => clearTimeout(t);
+  }, [hash]);
+
+  // Köhnə paylaşılmış linklər (/?xidmet=..&lat=..) usta axtarışına yönləndirilir
+  if (params.get("xidmet") || params.get("lat")) return <Navigate to={`${FIND}?${params}`} replace />;
 
   return (
     <>
       {/* HERO */}
-      <Box
-        sx={{
-          background: "linear-gradient(180deg, #ECFDF5 0%, #F6F8FA 100%)",
-          borderBottom: 1,
-          borderColor: "divider",
-        }}
-      >
-        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
-          <Grid container spacing={6} alignItems="center">
-            <Grid item xs={12} md={7}>
+      <Box sx={{ background: "linear-gradient(180deg, #ECFDF5 0%, #F6F8FA 100%)", borderBottom: 1, borderColor: "divider", overflow: "hidden" }}>
+        <Container maxWidth="lg" sx={{ py: { xs: 5, md: 9 } }}>
+          <Grid container spacing={{ xs: 4, md: 6 }} alignItems="center">
+            <Grid item xs={12} md={6}>
               <Chip
-                icon={<PlaceOutlinedIcon />}
-                label={masters ? `${masters.length} usta qeydiyyatdadır` : "Ustalar yüklənir..."}
-                sx={{ bgcolor: "#fff", border: 1, borderColor: "divider", mb: 3 }}
+                icon={<Box component="span" sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "#22C55E", ml: "10px !important" }} />}
+                label={stats ? `Hazırda ${stats.active} usta sifariş qəbul edir` : "Ustalar yüklənir..."}
+                sx={{ bgcolor: "#fff", border: 1, borderColor: "divider", mb: 2.5, fontWeight: 600 }}
               />
-              <Typography variant="h2" sx={{ fontSize: { xs: "2.2rem", md: "3.25rem" }, lineHeight: 1.1 }}>
-                Evinizdəki işə uyğun{" "}
-                <Box component="span" sx={{ color: "primary.main" }}>
-                  ustanı
-                </Box>{" "}
-                dəqiqələr içində tapın
+              <Typography variant="h2" sx={{ fontSize: { xs: "2.3rem", md: "3.4rem" }, lineHeight: 1.08, letterSpacing: "-0.03em", fontWeight: 800 }}>
+                Usta lazımdır?{" "}
+                <Box component="span" sx={{ color: "primary.main", display: "block" }}>
+                  Əl<Box component="span" sx={{ color: "secondary.main" }}>üstü</Box>.
+                </Box>
               </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400, mt: 2, mb: 4, maxWidth: 540 }}>
-                Santexnik, elektrikçi, kondisioner ustası və daha çoxu — yaxınlığınızda, birbaşa yazışma ilə.
+              <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 400, mt: 2, mb: 3.5, maxWidth: 520, lineHeight: 1.5 }}>
+                Problemi yaz, yaxınlıqdakı reytinqli ustanı tap, yaz və ya zəng et — gəlişini xəritədə izlə.
               </Typography>
-
-              <Paper
-                component="form"
-                onSubmit={handleSearch}
-                sx={{ p: 1, display: "flex", gap: 1, flexDirection: { xs: "column", sm: "row" }, border: 1, borderColor: "divider", boxShadow: "0 10px 30px rgba(15,23,42,.06)" }}
-              >
-                <TextField
-                  placeholder="Hansı usta lazımdır?"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon color="action" /></InputAdornment> }}
-                  sx={{ "& fieldset": { border: "none" } }}
-                />
-                <TextField
-                  select
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  SelectProps={{ displayEmpty: true }}
-                  sx={{ minWidth: { sm: 170 }, "& fieldset": { border: "none" } }}
-                  InputProps={{ startAdornment: <InputAdornment position="start"><PlaceOutlinedIcon color="action" /></InputAdornment> }}
-                >
-                  <MenuItem value="">Bütün şəhərlər</MenuItem>
-                  {CITIES.map((c) => (
-                    <MenuItem key={c} value={c}>{c}</MenuItem>
-                  ))}
-                </TextField>
-                <Button type="submit" variant="contained" size="large" sx={{ px: 4, flexShrink: 0 }}>
-                  Axtar
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+                <Button component={RouterLink} to={FIND} variant="contained" size="large" endIcon={<ArrowForwardIcon />} sx={{ px: 4, py: 1.5, fontSize: 17, borderRadius: 3 }}>
+                  Usta tap
                 </Button>
-              </Paper>
-
-              <Stack direction="row" spacing={1} sx={{ mt: 2 }} flexWrap="wrap" useFlexGap>
-                {POPULAR_CATEGORIES.slice(0, 4).map((c) => (
-                  <Chip
-                    key={c}
-                    label={c}
-                    component={RouterLink}
-                    to={`/ustalar?kateqoriya=${encodeURIComponent(c)}`}
-                    clickable
-                    variant="outlined"
-                    sx={{ bgcolor: "#fff" }}
-                  />
+                <Button href="#nece-isleyir" variant="outlined" size="large" sx={{ py: 1.5, borderRadius: 3, bgcolor: "#fff" }}>
+                  Necə işləyir?
+                </Button>
+              </Stack>
+              <Stack direction="row" spacing={2.5} sx={{ mt: 3, color: "text.secondary" }} flexWrap="wrap" useFlexGap>
+                {["Pulsuz", "Nömrən gizli qalır", "Şəffaf reytinq"].map((t) => (
+                  <Stack key={t} direction="row" spacing={0.75} alignItems="center">
+                    <CheckCircleRoundedIcon sx={{ fontSize: 18, color: "primary.main" }} />
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>{t}</Typography>
+                  </Stack>
                 ))}
               </Stack>
             </Grid>
-
-            {/* Yeni qoşulan ustalar — real data */}
-            <Grid item xs={12} md={5}>
-              <Card sx={{ p: 2.5, boxShadow: "0 20px 50px rgba(15,23,42,.08)" }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                  <Typography variant="subtitle1">Yeni qoşulan ustalar</Typography>
-                  <Button component={RouterLink} to="/ustalar" size="small" endIcon={<ArrowForwardIcon />}>
-                    Hamısı
-                  </Button>
-                </Stack>
-                <Stack spacing={1}>
-                  {masters === null
-                    ? [0, 1, 2].map((i) => <Skeleton key={i} variant="rounded" height={64} />)
-                    : masters.slice(0, 4).map((m) => (
-                        <CardActionArea key={m._id} component={RouterLink} to={`/usta/${m._id}`} sx={{ borderRadius: 3, p: 1.25 }}>
-                          <Stack direction="row" spacing={1.5} alignItems="center">
-                            <UserAvatar name={`${m.name} ${m.surname}`} size={44} />
-                            <Box sx={{ minWidth: 0 }}>
-                              <Typography variant="subtitle2" noWrap>{m.name} {m.surname}</Typography>
-                              <Typography variant="body2" color="text.secondary" noWrap>
-                                {m.category} · {m.city}
-                              </Typography>
-                            </Box>
-                          </Stack>
-                        </CardActionArea>
-                      ))}
-                  {masters?.length === 0 && (
-                    <Typography color="text.secondary" variant="body2">Hələ usta qeydiyyatdan keçməyib.</Typography>
-                  )}
-                </Stack>
-              </Card>
+            <Grid item xs={12} md={6}>
+              <HeroVisual />
             </Grid>
           </Grid>
         </Container>
       </Box>
 
-      {/* KATEQORİYALAR */}
-      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 9 } }}>
+      {/* XİDMƏTLƏR */}
+      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
         <Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ mb: 3 }}>
           <Box>
-            <Typography variant="h4">Populyar xidmətlər</Typography>
-            <Typography color="text.secondary" sx={{ mt: 0.5 }}>Ən çox axtarılan usta növləri</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 800 }}>Nə lazımdır?</Typography>
+            <Typography color="text.secondary" sx={{ mt: 0.5 }}>Xidməti seç — yaxınlıqdakı ustalar dərhal xəritədə</Typography>
           </Box>
-          <Button component={RouterLink} to="/ustalar" endIcon={<ArrowForwardIcon />} sx={{ display: { xs: "none", sm: "inline-flex" } }}>
-            Bütün kateqoriyalar
+          <Button component={RouterLink} to={FIND} endIcon={<ArrowForwardIcon />} sx={{ display: { xs: "none", sm: "inline-flex" } }}>
+            Bütün {CATEGORIES.length} xidmət
           </Button>
         </Stack>
-        <Grid container spacing={2}>
+        <Grid container spacing={1.5}>
           {POPULAR_CATEGORIES.map((c) => (
             <Grid item xs={6} sm={4} md={3} key={c}>
-              <Card sx={{ height: "100%", "&:hover": { borderColor: "primary.light" } }}>
-                <CardActionArea component={RouterLink} to={`/ustalar?kateqoriya=${encodeURIComponent(c)}`} sx={{ p: 2.5, height: "100%" }}>
-                  <Box sx={{ width: 48, height: 48, borderRadius: 3, bgcolor: "#ECFDF5", color: "primary.main", display: "grid", placeItems: "center", mb: 1.5 }}>
+              <Card sx={{ height: "100%", transition: "border-color .15s, transform .15s", "&:hover": { borderColor: "primary.light", transform: "translateY(-2px)" } }}>
+                <CardActionArea component={RouterLink} to={findFor(c)} sx={{ p: 2.25, height: "100%" }}>
+                  <Box sx={{ width: 46, height: 46, borderRadius: 3, bgcolor: "#ECFDF5", color: "primary.main", display: "grid", placeItems: "center", mb: 1.25 }}>
                     <CategoryIcon category={c} />
                   </Box>
-                  <Typography variant="subtitle1" sx={{ lineHeight: 1.3 }}>{c}</Typography>
+                  <Typography variant="subtitle1" sx={{ lineHeight: 1.3, fontWeight: 700 }}>{c}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {countByCategory[c] ? `${countByCategory[c]} usta` : "Usta axtar"}
+                    {stats?.counts[c] ? `${stats.counts[c]} aktiv usta` : "Usta axtar"}
                   </Typography>
                 </CardActionArea>
               </Card>
             </Grid>
           ))}
         </Grid>
+        <Button component={RouterLink} to={FIND} fullWidth variant="outlined" sx={{ mt: 2, display: { sm: "none" } }}>
+          Bütün {CATEGORIES.length} xidmət
+        </Button>
       </Container>
 
       {/* NECƏ İŞLƏYİR */}
-      <Box sx={{ bgcolor: "background.paper", borderBlock: 1, borderColor: "divider" }}>
-        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 9 } }}>
-          <Typography variant="h4" sx={{ textAlign: "center" }}>Necə işləyir?</Typography>
-          <Typography color="text.secondary" sx={{ textAlign: "center", mt: 0.5, mb: 5 }}>
-            Üç sadə addım
-          </Typography>
-          <Grid container spacing={4}>
+      <Box id="nece-isleyir" sx={{ bgcolor: "background.paper", borderBlock: 1, borderColor: "divider", scrollMarginTop: 72 }}>
+        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
+          <Typography variant="h4" sx={{ textAlign: "center", fontWeight: 800 }}>Necə işləyir?</Typography>
+          <Typography color="text.secondary" sx={{ textAlign: "center", mt: 0.5, mb: 5 }}>Problemdən həllə qədər 4 addım</Typography>
+          <Grid container spacing={3}>
             {STEPS.map((s, i) => (
-              <Grid item xs={12} md={4} key={s.title}>
-                <Stack alignItems="center" sx={{ textAlign: "center" }}>
-                  <Box sx={{ position: "relative", mb: 2 }}>
-                    <Box sx={{ width: 64, height: 64, borderRadius: "50%", bgcolor: "primary.main", color: "#fff", display: "grid", placeItems: "center", "& svg": { fontSize: 28 } }}>
-                      {s.icon}
-                    </Box>
-                    <Box sx={{ position: "absolute", top: -4, right: -4, width: 26, height: 26, borderRadius: "50%", bgcolor: "secondary.main", color: "#1F2937", fontWeight: 800, fontSize: 13, display: "grid", placeItems: "center", border: "3px solid #fff" }}>
-                      {i + 1}
-                    </Box>
-                  </Box>
-                  <Typography variant="h6">{s.title}</Typography>
-                  <Typography color="text.secondary" sx={{ maxWidth: 300 }}>{s.text}</Typography>
+              <Grid item xs={12} sm={6} md={3} key={s.title}>
+                <Stack sx={{ height: "100%", p: 2.5, borderRadius: 4, bgcolor: "#F8FAFC", border: 1, borderColor: "divider" }}>
+                  <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
+                    <Box sx={{ width: 48, height: 48, borderRadius: 3, bgcolor: "primary.main", color: "#fff", display: "grid", placeItems: "center" }}>{s.icon}</Box>
+                    <Typography sx={{ fontWeight: 900, fontSize: 34, color: "#E2E8F0", lineHeight: 1 }}>0{i + 1}</Typography>
+                  </Stack>
+                  <Typography variant="h6" sx={{ fontWeight: 800 }}>{s.title}</Typography>
+                  <Typography color="text.secondary" variant="body2" sx={{ mt: 0.5, lineHeight: 1.6 }}>{s.text}</Typography>
                 </Stack>
               </Grid>
             ))}
           </Grid>
+          <Box sx={{ textAlign: "center", mt: 4 }}>
+            <Button component={RouterLink} to={FIND} variant="contained" size="large" endIcon={<ArrowForwardIcon />} sx={{ borderRadius: 3, px: 4 }}>
+              İndi sına
+            </Button>
+          </Box>
         </Container>
       </Box>
 
-      {/* XƏRİTƏ + USTA CTA */}
-      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 9 } }}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Card sx={{ p: 4, height: "100%", display: "flex", flexDirection: "column" }}>
-              <MapOutlinedIcon color="primary" sx={{ fontSize: 40, mb: 2 }} />
-              <Typography variant="h5">Yaxınlığınızdakı ustaları xəritədə görün</Typography>
-              <Typography color="text.secondary" sx={{ mt: 1, mb: 3, flex: 1 }}>
-                Yerinizi paylaşın — ustalar sizə olan məsafəyə görə sıralansın.
-              </Typography>
-              <Box>
-                <Button component={RouterLink} to="/" variant="outlined" endIcon={<ArrowForwardIcon />}>
-                  Xəritəni aç
-                </Button>
+      {/* ÜSTÜNLÜKLƏR + RƏQƏMLƏR */}
+      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
+        <Typography variant="h4" sx={{ fontWeight: 800, mb: 3 }}>Niyə Əlüstü?</Typography>
+        <Grid container spacing={2}>
+          {FEATURES.map((f) => (
+            <Grid item xs={12} sm={6} md={3} key={f.title}>
+              <Card sx={{ p: 2.5, height: "100%" }}>
+                <Box sx={{ color: "primary.main", mb: 1, "& svg": { fontSize: 30 } }}>{f.icon}</Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>{f.title}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, lineHeight: 1.6 }}>{f.text}</Typography>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
+          {[
+            [stats?.masters, "qeydiyyatlı usta"],
+            [CATEGORIES.length, "xidmət növü"],
+            ["0 ₼", "müştəri üçün haqq"],
+          ].map(([value, label]) => (
+            <Grid item xs={4} key={label}>
+              <Box sx={{ textAlign: "center", py: { xs: 2, md: 3 }, borderRadius: 4, bgcolor: "#ECFDF5" }}>
+                <Typography sx={{ fontWeight: 900, fontSize: { xs: 26, md: 40 }, color: "primary.dark", lineHeight: 1.1 }}>{value ?? "—"}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>{label}</Typography>
               </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Card sx={{ p: 4, height: "100%", bgcolor: "primary.main", color: "#fff", border: "none", display: "flex", flexDirection: "column" }}>
-              <Typography variant="overline" sx={{ color: "secondary.light", fontWeight: 700 }}>Ustalar üçün</Typography>
-              <Typography variant="h5">Bacarığınızı müştərilərə göstərin</Typography>
-              <Typography sx={{ mt: 1, mb: 3, opacity: 0.85, flex: 1 }}>
-                Pulsuz profil yaradın, işlərinizi paylaşın və müştərilərdən birbaşa mesaj alın.
-              </Typography>
-              <Box>
-                <Button component={RouterLink} to="/qeydiyyat?rol=usta" variant="contained" color="secondary" endIcon={<ArrowForwardIcon />}>
-                  Usta kimi qoşul
-                </Button>
-              </Box>
-            </Card>
-          </Grid>
+            </Grid>
+          ))}
         </Grid>
       </Container>
+
+      {/* USTALAR ÜÇÜN + SUALLAR */}
+      <Box sx={{ bgcolor: "background.paper", borderTop: 1, borderColor: "divider" }}>
+        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={5}>
+              <Card sx={{ p: { xs: 3, md: 4 }, height: "100%", bgcolor: "primary.main", color: "#fff", border: "none", display: "flex", flexDirection: "column" }}>
+                <Typography variant="overline" sx={{ color: "secondary.light", fontWeight: 800 }}>Ustalar üçün</Typography>
+                <Typography variant="h5" sx={{ fontWeight: 800 }}>Yaxınlığındakı müştərilər səni gözləyir</Typography>
+                <Stack spacing={1} sx={{ mt: 2, mb: 3, flex: 1 }}>
+                  {["Pulsuz profil, işlərini şəkil və videoyla göstər", "Sifarişləri qəbul et, qiyməti özün yaz", "Yaxşı rəylər — daha çox müştəri"].map((t) => (
+                    <Stack key={t} direction="row" spacing={1} alignItems="flex-start">
+                      <CheckCircleRoundedIcon sx={{ fontSize: 20, color: "secondary.light", mt: "1px" }} />
+                      <Typography sx={{ opacity: 0.92 }}>{t}</Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+                <Box>
+                  <Button component={RouterLink} to="/qeydiyyat?rol=usta" variant="contained" color="secondary" endIcon={<ArrowForwardIcon />}>
+                    Usta kimi qoşul
+                  </Button>
+                </Box>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={7}>
+              <Typography variant="h5" sx={{ fontWeight: 800, mb: 2 }}>Tez-tez verilən suallar</Typography>
+              {FAQ.map(([q, a]) => (
+                <Accordion key={q} disableGutters elevation={0} sx={{ border: 1, borderColor: "divider", "&:not(:last-of-type)": { borderBottom: 0 }, "&:before": { display: "none" } }}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography sx={{ fontWeight: 700 }}>{q}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ pt: 0 }}>
+                    <Typography color="text.secondary" sx={{ lineHeight: 1.6 }}>{a}</Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* SON ÇAĞIRIŞ */}
+      <Box sx={{ bgcolor: "#0B3B36", color: "#fff" }}>
+        <Container maxWidth="md" sx={{ py: { xs: 6, md: 7 }, textAlign: "center" }}>
+          <Typography variant="h4" sx={{ fontWeight: 800 }}>Bir şey xarab oldu?</Typography>
+          <Typography sx={{ mt: 1, mb: 3, color: "#99F6E4" }}>Usta bir neçə dəqiqəyə tapılır.</Typography>
+          <Button component={RouterLink} to={FIND} variant="contained" color="secondary" size="large" endIcon={<ArrowForwardIcon />} sx={{ px: 5, py: 1.5, borderRadius: 3, fontSize: 17 }}>
+            Usta tap
+          </Button>
+        </Container>
+      </Box>
     </>
   );
 }

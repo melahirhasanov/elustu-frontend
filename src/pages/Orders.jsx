@@ -93,7 +93,7 @@ export default function Orders() {
               ? "Müştəri sizə sifariş verəndə burada görünəcək və bildiriş alacaqsınız."
               : "Xəritədən ustanı seçin və \"Sifariş ver\" düyməsinə basın."
           }
-          action={role !== "master" && tab === "active" && <Button variant="contained" component={RouterLink} to="/">Usta tap</Button>}
+          action={role !== "master" && tab === "active" && <Button variant="contained" component={RouterLink} to="/tap">Usta tap</Button>}
         />
       ) : (
         <Stack spacing={2}>

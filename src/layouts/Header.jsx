@@ -13,7 +13,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import { logout, selectDisplayName } from "../store/authSlice";
 import UserAvatar from "../components/UserAvatar";
@@ -35,10 +35,10 @@ export function Logo() {
 }
 
 const NAV = [
-  { label: "Xəritə", to: "/", icon: <MapOutlinedIcon /> },
+  { label: "Ana səhifə", to: "/", icon: <HomeOutlinedIcon /> },
+  { label: "Usta tap", to: "/tap", icon: <MapOutlinedIcon /> },
   { label: "Ustalar", to: "/ustalar", icon: <SearchIcon /> },
   { label: "Sifarişlər", to: "/sifarisler", icon: <AssignmentOutlinedIcon />, auth: true, badge: "orders" },
-  { label: "Haqqımızda", to: "/haqqimizda", icon: <InfoOutlinedIcon />, wideOnly: true },
 ];
 
 export default function Header() {

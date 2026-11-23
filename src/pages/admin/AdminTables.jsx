@@ -127,7 +127,7 @@ export function AdminOrders() {
                   <TableCell align="right">{o.price != null ? `${o.price} AZN` : "—"}</TableCell>
                   <TableCell>{o.review?.rating ? <Stars value={o.review.rating} /> : "—"}</TableCell>
                   <TableCell>
-                    {["pending", "accepted", "in_progress"].includes(o.status) && (
+                    {["pending", "accepted", "on_the_way", "in_progress"].includes(o.status) && (
                       <Button size="small" color="error" onClick={() => cancel(o)}>Ləğv et</Button>
                     )}
                   </TableCell>

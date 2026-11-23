@@ -6,7 +6,6 @@ import {
   ListItemIcon, ListItemText, Menu, MenuItem, Stack, Toolbar, Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import HandymanIcon from "@mui/icons-material/Handyman";
 import SearchIcon from "@mui/icons-material/Search";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -18,6 +17,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import { logout, selectDisplayName } from "../store/authSlice";
 import UserAvatar from "../components/UserAvatar";
+import BrandMark from "../components/BrandMark";
 import socketService from "../api/socket";
 import useUnreadMessages from "../hooks/useUnreadMessages";
 import usePendingOrders from "../hooks/usePendingOrders";
@@ -26,11 +26,9 @@ export function Logo() {
   return (
     <Stack component={RouterLink} to="/" direction="row" alignItems="center" spacing={1}
       sx={{ textDecoration: "none", color: "text.primary" }}>
-      <Box sx={{ width: 36, height: 36, borderRadius: 2.5, bgcolor: "primary.main", color: "#fff", display: "grid", placeItems: "center" }}>
-        <HandymanIcon fontSize="small" />
-      </Box>
+      <BrandMark size={36} />
       <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: "-0.02em" }}>
-        Usta<Box component="span" sx={{ color: "secondary.main" }}>.az</Box>
+        Əl<Box component="span" sx={{ color: "secondary.main" }}>üstü</Box>
       </Typography>
     </Stack>
   );

@@ -30,7 +30,7 @@ export default function Footer() {
           </Stack>
         </Stack>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 3 }}>
-          © {new Date().getFullYear()} Usta.az
+          © {new Date().getFullYear()} Əlüstü
         </Typography>
       </Container>
     </Box>

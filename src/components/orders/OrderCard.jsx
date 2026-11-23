@@ -18,8 +18,10 @@ import CallButton from "../../calls/CallButton";
 import MastersMap from "../map/MastersMap";
 import { formatClock, formatDate } from "../../utils/date";
 import { ACTIONS, STATUS } from "./orderStatus";
+import LiveTracking from "./LiveTracking";
+import useShareLocation from "../../hooks/useShareLocation";
 
-const FLOW = ["pending", "accepted", "in_progress", "completed"];
+const FLOW = ["pending", "accepted", "on_the_way", "in_progress", "completed"];
 
 export default function OrderCard({ order, role, online, onChanged, onReview }) {
   const [expanded, setExpanded] = useState(false);
@@ -40,6 +42,9 @@ export default function OrderCard({ order, role, online, onChanged, onReview }) 
   const actions = ACTIONS[role]?.[order.status] || [];
   const finished = ["rejected", "cancelled"].includes(order.status);
   const location = order.location?.coordinates?.length === 2 ? order.location : null;
+  const onTheWay = order.status === "on_the_way";
+  // Usta "Yola çıxdım" deyəndə yeri müştəriyə canlı göndərilir (səhifə açıq olduqca)
+  const sharing = useShareLocation(order._id, isMaster && onTheWay);
 
   const changeStatus = async (to, extra = {}) => {
     setBusy(true);
@@ -102,6 +107,17 @@ export default function OrderCard({ order, role, online, onChanged, onReview }) 
           <Typography variant="body2" sx={{ mt: 1, p: 1.25, bgcolor: "#F1F5F9", borderRadius: 2 }}>
             <b>Ustanın qeydi:</b> {order.masterNote}
           </Typography>
+        )}
+
+        {onTheWay && (
+          <Box sx={{ mt: 2 }}>
+            {isMaster && (
+              <Typography variant="caption" sx={{ display: "block", mb: 1, color: sharing === "denied" ? "error.main" : "text.secondary" }}>
+                {sharing === "denied" ? "Yer icazəsi verilməyib — müştəri sizi xəritədə görə bilmir." : "Yeriniz müştəriyə canlı göndərilir. Çatanda “Çatdım, işə başla” düyməsinə basın."}
+              </Typography>
+            )}
+            <LiveTracking order={order} />
+          </Box>
         )}
 
         {order.review?.rating && (

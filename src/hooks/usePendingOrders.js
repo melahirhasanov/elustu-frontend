@@ -19,7 +19,7 @@ export default function usePendingOrders() {
       api.get("/api/orders/mine")
         .then(({ data }) =>
           setCount(
-            data.filter((o) => (role === "master" ? o.status === "pending" : ["pending", "accepted", "in_progress"].includes(o.status))).length
+            data.filter((o) => (role === "master" ? o.status === "pending" : ["pending", "accepted", "on_the_way", "in_progress"].includes(o.status))).length
           )
         )
         .catch(() => {});

@@ -33,7 +33,7 @@ export default function AdminOverview({ onNavigate }) {
   if (stats === null) return <Grid container spacing={2}>{[0, 1, 2, 3].map((i) => <Grid item xs={12} sm={6} md={3} key={i}><Skeleton variant="rounded" height={96} /></Grid>)}</Grid>;
   if (stats === false) return <Typography color="error">Statistika yüklənmədi</Typography>;
 
-  const statusOrder = ["pending", "accepted", "in_progress", "completed", "cancelled", "rejected"];
+  const statusOrder = ["pending", "accepted", "on_the_way", "in_progress", "completed", "cancelled", "rejected"];
 
   return (
     <Stack spacing={3}>

@@ -30,7 +30,7 @@ export default function AuthShell({ title, subtitle, children, maxWidth = "md", 
               background: "linear-gradient(160deg, #0F766E 0%, #115E59 100%)",
             }}
           >
-            <Typography variant="h5" sx={{ mb: 3 }}>Usta.az ilə işiniz asanlaşır</Typography>
+            <Typography variant="h5" sx={{ mb: 3 }}>Əlüstü ilə işiniz asanlaşır</Typography>
             <Stack spacing={2}>
               {POINTS.map((p) => (
                 <Stack key={p} direction="row" spacing={1.5} alignItems="flex-start">

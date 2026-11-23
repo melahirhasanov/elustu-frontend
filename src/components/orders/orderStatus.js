@@ -2,13 +2,14 @@
 export const STATUS = {
   pending: { label: "Gözləyir", color: "warning", hint: "Usta sifarişi hələ qəbul etməyib" },
   accepted: { label: "Qəbul edildi", color: "info", hint: "Usta gəlməyə hazırlaşır" },
+  on_the_way: { label: "Yoldadır", color: "secondary", hint: "Usta yoldadır — xəritədə izləyin" },
   in_progress: { label: "İcra olunur", color: "primary", hint: "Usta işi görür" },
   completed: { label: "Tamamlandı", color: "success", hint: "İş başa çatıb" },
   rejected: { label: "Rədd edildi", color: "default", hint: "Usta bu sifarişi götürə bilmədi" },
   cancelled: { label: "Ləğv edildi", color: "default", hint: "Sifariş ləğv olunub" },
 };
 
-export const ACTIVE_STATUSES = ["pending", "accepted", "in_progress"];
+export const ACTIVE_STATUSES = ["pending", "accepted", "on_the_way", "in_progress"];
 
 // Hər rol üçün mümkün növbəti addımlar (düymə mətni ilə)
 export const ACTIONS = {
@@ -18,13 +19,19 @@ export const ACTIONS = {
       { to: "rejected", label: "Rədd et", variant: "outlined", color: "error", confirm: "Sifarişi rədd etmək istəyirsiniz?" },
     ],
     accepted: [
-      { to: "in_progress", label: "İşə başla", variant: "contained" },
+      { to: "on_the_way", label: "Yola çıxdım", variant: "contained" },
+      { to: "in_progress", label: "İşə başla", variant: "outlined" },
       { to: "cancelled", label: "Ləğv et", variant: "text", color: "error", confirm: "Qəbul etdiyiniz sifarişi ləğv etmək istəyirsiniz?" },
+    ],
+    on_the_way: [
+      { to: "in_progress", label: "Çatdım, işə başla", variant: "contained" },
+      { to: "cancelled", label: "Ləğv et", variant: "text", color: "error", confirm: "Sifarişi ləğv etmək istəyirsiniz?" },
     ],
     in_progress: [{ to: "completed", label: "Tamamlandı", variant: "contained", color: "success" }],
   },
   customer: {
     pending: [{ to: "cancelled", label: "Ləğv et", variant: "outlined", color: "error", confirm: "Sifarişi ləğv etmək istəyirsiniz?" }],
     accepted: [{ to: "cancelled", label: "Ləğv et", variant: "outlined", color: "error", confirm: "Usta artıq qəbul edib. Yenə də ləğv edilsin?" }],
+    on_the_way: [{ to: "cancelled", label: "Ləğv et", variant: "outlined", color: "error", confirm: "Usta artıq yoldadır. Yenə də ləğv edilsin?" }],
   },
 };

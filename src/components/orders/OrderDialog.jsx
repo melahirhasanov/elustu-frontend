@@ -16,7 +16,7 @@ function defaultTime() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export default function OrderDialog({ open, master, onClose, initialPosition }) {
+export default function OrderDialog({ open, master, onClose, initialPosition, initialDescription = "", initialAddress = "" }) {
   const navigate = useNavigate();
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
@@ -29,9 +29,12 @@ export default function OrderDialog({ open, master, onClose, initialPosition }) 
     if (!open) return;
     setError("");
     setPosition(initialPosition || null);
+    // Ana səhifədə yazılan problem və ünvan formaya ötürülür (istifadəçi artıq nəsə yazıbsa, toxunulmur)
+    if (initialDescription) setDescription((d) => d || initialDescription);
+    if (initialAddress) setAddress((a) => a || initialAddress);
     // Yer məlum deyilsə, brauzerdən soruşmağa çalış (səssiz)
     if (!initialPosition) getCurrentPosition().then(setPosition).catch(() => {});
-  }, [open, initialPosition]);
+  }, [open, initialPosition, initialDescription, initialAddress]);
 
   const submit = async () => {
     if (description.trim().length < 10) return setError("İşi bir az ətraflı təsvir edin (ən azı 10 simvol)");

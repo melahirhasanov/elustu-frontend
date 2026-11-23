@@ -29,5 +29,20 @@ export const POPULAR_CATEGORIES = [
   "Mebel ustası", "Malyar (Rəngsaz)", "Təmizlik ustası", "Təmir-tikinti ustası",
 ];
 
+// Yer seçimində sürətli seçim üçün Bakı rayonları və yaxın şəhərlər (təxmini mərkəz nöqtələri)
+export const QUICK_AREAS = [
+  { title: "Nəsimi", lat: 40.3925, lng: 49.8425 },
+  { title: "Nərimanov", lat: 40.4045, lng: 49.8725 },
+  { title: "Yasamal", lat: 40.3865, lng: 49.8095 },
+  { title: "Səbail", lat: 40.3655, lng: 49.8355 },
+  { title: "Xətai", lat: 40.3830, lng: 49.8950 },
+  { title: "Nizami", lat: 40.3985, lng: 49.9455 },
+  { title: "Binəqədi", lat: 40.4600, lng: 49.8300 },
+  { title: "Sabunçu", lat: 40.4430, lng: 49.9480 },
+  { title: "Suraxanı", lat: 40.4220, lng: 50.0050 },
+  { title: "Xırdalan", lat: 40.4480, lng: 49.7550 },
+  { title: "Sumqayıt", lat: 40.5897, lng: 49.6686 },
+];
+
 // Bakı mərkəzi — xəritənin standart görünüşü
 export const DEFAULT_CENTER = [40.4093, 49.8671];

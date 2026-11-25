@@ -1,8 +1,29 @@
-# React + Vite
+# Əlüstü — frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Yaxınlıqdakı ustanı xəritədə tapmaq, yazışmaq, zəng etmək və sifariş vermək üçün veb tətbiq.
+React 18, Vite, MUI, Redux Toolkit, MapLibre. Backend ayrıca repo-dadır. Canlı sayt: https://elustu.netlify.app
 
-Currently, two official plugins are available:
+## İşə salma
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm ci
+cp .env.example .env
+npm run dev        # http://localhost:5173
+npm run lint
+npm run build && npm run csp-hash
+```
+
+## Struktur
+
+| Qovluq | Məzmun |
+|---|---|
+| `src/pages/` | Səhifələr (`admin/` — admin panel, `auth/` — giriş və qeydiyyat) |
+| `src/components/` | Təkrar istifadə olunan hissələr: xəritə, sifariş, profil, rəy |
+| `src/layouts/` | Menyu, footer, telefon naviqasiyası |
+| `src/calls/` | Saytdan zəng (WebRTC) |
+| `src/api/` | REST və socket bağlantısı |
+| `src/store/` | Redux: sessiya |
+| `src/hooks/`, `src/utils/`, `src/constants/` | Köməkçilər |
+
+`VITE_` ilə başlayan dəyərlər brauzerə gedir: ora heç vaxt gizli açar yazmayın.
+Təhlükəsizlik başlıqları (CSP, HSTS) `netlify.toml` faylındadır.

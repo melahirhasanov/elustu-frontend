@@ -33,7 +33,7 @@ export default function Register() {
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: key === "phone" ? phoneDigits(e.target.value) : e.target.value }));
 
   const validate = () => {
-    if (form.password.length < 6) return "Şifrə ən azı 6 simvol olmalıdır";
+    if (form.password.length < 8) return "Şifrə ən azı 8 simvol olmalıdır";
     if (form.password !== form.password2) return "Şifrələr eyni deyil";
     if (role === "master") {
       if (form.phone.length !== 9) return "Telefon nömrəsini tam daxil edin (9 rəqəm)";
@@ -89,10 +89,10 @@ export default function Register() {
         value={role}
         onChange={(_, v) => setParams(v === "master" ? { rol: "usta" } : {}, { replace: true })}
         variant="fullWidth"
-        sx={{ mb: 3, bgcolor: "#F1F5F9", borderRadius: 2.5, p: 0.5, minHeight: 0, "& .MuiTabs-indicator": { display: "none" } }}
+        sx={{ mb: 3, bgcolor: "surface.subtle", borderRadius: 2.5, p: 0.5, minHeight: 0, "& .MuiTabs-indicator": { display: "none" } }}
       >
         {[["customer", "Müştəriyəm"], ["master", "Ustayam"]].map(([value, label]) => (
-          <Tab key={value} value={value} label={label} sx={{ minHeight: 40, borderRadius: 2, "&.Mui-selected": { bgcolor: "#fff", boxShadow: "0 1px 3px rgba(15,23,42,.1)" } }} />
+          <Tab key={value} value={value} label={label} sx={{ minHeight: 40, borderRadius: 2, "&.Mui-selected": { bgcolor: "background.paper", boxShadow: "0 1px 3px rgba(15,23,42,.1)" } }} />
         ))}
       </Tabs>
 
@@ -123,7 +123,7 @@ export default function Register() {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField label="Şifrə" type="password" value={form.password} onChange={set("password")} required autoComplete="new-password" helperText="Ən azı 6 simvol" />
+            <TextField label="Şifrə" type="password" value={form.password} onChange={set("password")} required autoComplete="new-password" helperText="Ən azı 8 simvol" />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField label="Şifrəni təkrarlayın" type="password" value={form.password2} onChange={set("password2")} required autoComplete="new-password" />

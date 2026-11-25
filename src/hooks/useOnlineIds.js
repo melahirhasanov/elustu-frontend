@@ -10,8 +10,9 @@ export default function useOnlineIds() {
 
   useEffect(() => {
     let cancelled = false;
+    setIds(new Set()); // başqa hesaba keçəndə köhnə siyahı qalmasın
     api.get("/api/online-users")
-      .then(({ data }) => !cancelled && setIds(new Set((data.ids || []).map(String))))
+      .then(({ data }) => !cancelled && setIds((prev) => new Set([...prev, ...(data.ids || []).map(String)])))
       .catch(() => {});
 
     const onStatus = (data) =>

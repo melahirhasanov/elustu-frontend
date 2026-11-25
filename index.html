@@ -12,6 +12,14 @@
     <title>Əlüstü — usta əlinin altında</title>
   </head>
   <body>
+    <script>
+      // Gecə rejimində ilk yüklənmədə ağ işartı olmasın
+      try {
+        var m = localStorage.getItem("mui-mode") || "system";
+        if (m === "system") m = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-mui-color-scheme", m);
+      } catch (e) {}
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

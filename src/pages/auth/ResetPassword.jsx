@@ -14,7 +14,7 @@ export default function ResetPassword() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (password.length < 6) return setError("Şifrə ən azı 6 simvol olmalıdır");
+    if (password.length < 8) return setError("Şifrə ən azı 8 simvol olmalıdır");
     if (password !== password2) return setError("Şifrələr eyni deyil");
     setSaving(true);
     setError("");

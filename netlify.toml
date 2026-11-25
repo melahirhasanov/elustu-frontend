@@ -21,6 +21,10 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), geolocation=(self), microphone=(self)"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    # Yad skript işləməsin və token kənar ünvana göndərilməsin (XSS-ə qarşı ikinci qat).
+    # 'sha256-…' index.html-dəki tək inline skriptdir; onu dəyişəndə "npm run csp-hash" ilə yeniləyin.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'sha256-0aKvTyjjzIzapTx781Ftzx2ID10WbqaQiRx2avof9/s='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://res.cloudinary.com https://tiles.openfreemap.org https://usta-az-api.onrender.com; media-src 'self' blob: https://res.cloudinary.com https://usta-az-api.onrender.com; connect-src 'self' https://usta-az-api.onrender.com wss://usta-az-api.onrender.com https://tiles.openfreemap.org; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
 
 [[headers]]
   for = "/assets/*"

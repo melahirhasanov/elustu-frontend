@@ -47,7 +47,7 @@ export default function ReviewsSection({ masterId, compact = false }) {
                 <LinearProgress
                   variant="determinate"
                   value={pct}
-                  sx={{ flex: 1, height: 7, borderRadius: 4, bgcolor: "#EEF2F6", "& .MuiLinearProgress-bar": { bgcolor: "secondary.main", borderRadius: 4 } }}
+                  sx={{ flex: 1, height: 7, borderRadius: 4, bgcolor: "surface.subtle", "& .MuiLinearProgress-bar": { bgcolor: "secondary.main", borderRadius: 4 } }}
                 />
                 <Typography variant="caption" color="text.secondary" sx={{ width: 22, textAlign: "right" }}>{n}</Typography>
               </Stack>
@@ -60,7 +60,7 @@ export default function ReviewsSection({ masterId, compact = false }) {
         Reytinq necə hesablanır?
       </Button>
       <Collapse in={showHow}>
-        <Box sx={{ p: 1.5, bgcolor: "#F1F5F9", borderRadius: 2, mt: 0.5 }}>
+        <Box sx={{ p: 1.5, bgcolor: "surface.subtle", borderRadius: 2, mt: 0.5 }}>
           <Typography variant="body2" color="text.secondary">
             Reytinq yalnız <b>tamamlanmış sifarişlərdən</b> sonra həmin sifarişin müştərisinin yazdığı rəylərdən hesablanır —
             hər sifarişə bir rəy. Heç bir gizli əmsal və ya pullu yüksəltmə yoxdur, sadə ortadır:

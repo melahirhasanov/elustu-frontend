@@ -1,5 +1,6 @@
 // OpenFreeMap — pulsuz, açarsız vektor xəritə (OpenStreetMap məlumatları əsasında)
 export const MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
+export const MAP_STYLE_DARK = "https://tiles.openfreemap.org/styles/dark";
 
 // Bakı mərkəzi
 export const DEFAULT_VIEW = { longitude: 49.8671, latitude: 40.4093, zoom: 11 };

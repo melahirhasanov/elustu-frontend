@@ -17,6 +17,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import { logout, selectDisplayName } from "../store/authSlice";
 import UserAvatar from "../components/UserAvatar";
+import ModeToggle from "../components/ModeToggle";
 import BrandMark from "../components/BrandMark";
 import socketService from "../api/socket";
 import useUnreadMessages from "../hooks/useUnreadMessages";
@@ -78,7 +79,7 @@ export default function Header() {
   });
 
   return (
-    <AppBar position="sticky" sx={{ bgcolor: "rgba(255,255,255,.9)", backdropFilter: "blur(8px)", borderBottom: 1, borderColor: "divider" }}>
+    <AppBar position="sticky" sx={{ bgcolor: "surface.glass", backdropFilter: "blur(8px)", borderBottom: 1, borderColor: "divider" }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ gap: 2, minHeight: { xs: 60, md: 68 } }}>
           <Logo />
@@ -94,6 +95,7 @@ export default function Header() {
           </Stack>
 
           <Box sx={{ flex: 1 }} />
+          <ModeToggle />
 
           {user ? (
             <Stack direction="row" spacing={1} alignItems="center">

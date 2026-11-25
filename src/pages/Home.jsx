@@ -66,18 +66,18 @@ function useStats() {
 
 // Sağ tərəfdəki vizual: tətbiqdən kiçik "kəsiklər" (usta kartı, izləmə)
 function HeroVisual() {
-  const card = { bgcolor: "#fff", borderRadius: 4, boxShadow: "0 20px 50px rgba(15,23,42,.14)", border: 1, borderColor: "divider" };
+  const card = { bgcolor: "background.paper", borderRadius: 4, boxShadow: "0 20px 50px rgba(15,23,42,.14)", border: 1, borderColor: "divider" };
   return (
     <Box sx={{ position: "relative", height: { xs: 330, md: 420 }, maxWidth: 440, mx: "auto" }}>
       {/* xəritə fonu */}
       <Box sx={{
         position: "absolute", inset: { xs: "10px 20px 40px", md: "0 30px 60px" }, borderRadius: 6, overflow: "hidden",
-        background: "linear-gradient(135deg, #E2F3EE 0%, #F1F5F9 100%)", border: 1, borderColor: "divider",
+        background: (t) => `linear-gradient(135deg, ${t.vars.palette.surface.tint} 0%, ${t.vars.palette.surface.subtle} 100%)`, border: 1, borderColor: "divider",
       }}>
         <svg width="100%" height="100%" viewBox="0 0 300 320" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M-10 90 L310 130 M-10 230 L310 190 M70 -10 L110 330 M210 -10 L190 330" stroke="#fff" strokeWidth="14" fill="none" />
-          <path d="M-10 90 L310 130 M-10 230 L310 190 M70 -10 L110 330 M210 -10 L190 330" stroke="#CBD5E1" strokeWidth="1.5" fill="none" />
-          <path d="M200 70 C180 120 150 150 120 210" stroke="#0F766E" strokeWidth="4" strokeDasharray="8 7" fill="none" />
+          <path d="M-10 90 L310 130 M-10 230 L310 190 M70 -10 L110 330 M210 -10 L190 330" stroke="var(--mui-palette-background-paper)" strokeWidth="14" fill="none" />
+          <path d="M-10 90 L310 130 M-10 230 L310 190 M70 -10 L110 330 M210 -10 L190 330" stroke="var(--mui-palette-divider)" strokeWidth="1.5" fill="none" />
+          <path d="M200 70 C180 120 150 150 120 210" stroke="var(--mui-palette-primary-main)" strokeWidth="4" strokeDasharray="8 7" fill="none" />
           <circle cx="120" cy="212" r="11" fill="#0F172A" stroke="#fff" strokeWidth="4" />
         </svg>
         <Box sx={{
@@ -110,7 +110,7 @@ function HeroVisual() {
       </Box>
 
       {/* izləmə bildirişi */}
-      <Box sx={{ ...card, position: "absolute", right: 0, top: { xs: 0, md: 24 }, px: 1.75, py: 1.25, display: "flex", alignItems: "center", gap: 1.25, bgcolor: "#FFFBEB" }}>
+      <Box sx={{ ...card, position: "absolute", right: 0, top: { xs: 0, md: 24 }, px: 1.75, py: 1.25, display: "flex", alignItems: "center", gap: 1.25, bgcolor: "surface.warm" }}>
         <SensorsIcon sx={{ color: "secondary.dark" }} />
         <Box>
           <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>Usta yoldadır</Typography>
@@ -139,14 +139,14 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <Box sx={{ background: "linear-gradient(180deg, #ECFDF5 0%, #F6F8FA 100%)", borderBottom: 1, borderColor: "divider", overflow: "hidden" }}>
+      <Box sx={{ background: (t) => `linear-gradient(180deg, ${t.vars.palette.surface.tint} 0%, ${t.vars.palette.background.default} 100%)`, borderBottom: 1, borderColor: "divider", overflow: "hidden" }}>
         <Container maxWidth="lg" sx={{ py: { xs: 5, md: 9 } }}>
           <Grid container spacing={{ xs: 4, md: 6 }} alignItems="center">
             <Grid item xs={12} md={6}>
               <Chip
                 icon={<Box component="span" sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "#22C55E", ml: "10px !important" }} />}
                 label={stats ? `Hazırda ${stats.active} usta sifariş qəbul edir` : "Ustalar yüklənir..."}
-                sx={{ bgcolor: "#fff", border: 1, borderColor: "divider", mb: 2.5, fontWeight: 600 }}
+                sx={{ bgcolor: "background.paper", border: 1, borderColor: "divider", mb: 2.5, fontWeight: 600 }}
               />
               <Typography variant="h2" sx={{ fontSize: { xs: "2.3rem", md: "3.4rem" }, lineHeight: 1.08, letterSpacing: "-0.03em", fontWeight: 800 }}>
                 Usta lazımdır?{" "}
@@ -161,7 +161,7 @@ export default function Home() {
                 <Button component={RouterLink} to={FIND} variant="contained" size="large" endIcon={<ArrowForwardIcon />} sx={{ px: 4, py: 1.5, fontSize: 17, borderRadius: 3 }}>
                   Usta tap
                 </Button>
-                <Button href="#nece-isleyir" variant="outlined" size="large" sx={{ py: 1.5, borderRadius: 3, bgcolor: "#fff" }}>
+                <Button href="#nece-isleyir" variant="outlined" size="large" sx={{ py: 1.5, borderRadius: 3, bgcolor: "background.paper" }}>
                   Necə işləyir?
                 </Button>
               </Stack>
@@ -195,9 +195,9 @@ export default function Home() {
         <Grid container spacing={1.5}>
           {POPULAR_CATEGORIES.map((c) => (
             <Grid item xs={6} sm={4} md={3} key={c}>
-              <Card sx={{ height: "100%", transition: "border-color .15s, transform .15s", "&:hover": { borderColor: "primary.light", transform: "translateY(-2px)" } }}>
+              <Card sx={{ height: "100%", transition: "border-color .15s, transform .15s", "&:hover": { borderColor: "primary.main", transform: "translateY(-3px)", boxShadow: "0 12px 28px rgba(15,23,42,.10)" } }}>
                 <CardActionArea component={RouterLink} to={findFor(c)} sx={{ p: 2.25, height: "100%" }}>
-                  <Box sx={{ width: 46, height: 46, borderRadius: 3, bgcolor: "#ECFDF5", color: "primary.main", display: "grid", placeItems: "center", mb: 1.25 }}>
+                  <Box sx={{ width: 46, height: 46, borderRadius: 3, bgcolor: "surface.tint", color: "primary.main", display: "grid", placeItems: "center", mb: 1.25 }}>
                     <CategoryIcon category={c} />
                   </Box>
                   <Typography variant="subtitle1" sx={{ lineHeight: 1.3, fontWeight: 700 }}>{c}</Typography>
@@ -222,10 +222,10 @@ export default function Home() {
           <Grid container spacing={3}>
             {STEPS.map((s, i) => (
               <Grid item xs={12} sm={6} md={3} key={s.title}>
-                <Stack sx={{ height: "100%", p: 2.5, borderRadius: 4, bgcolor: "#F8FAFC", border: 1, borderColor: "divider" }}>
+                <Stack sx={{ height: "100%", p: 2.5, borderRadius: 4, bgcolor: "surface.subtle", border: 1, borderColor: "divider" }}>
                   <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
-                    <Box sx={{ width: 48, height: 48, borderRadius: 3, bgcolor: "primary.main", color: "#fff", display: "grid", placeItems: "center" }}>{s.icon}</Box>
-                    <Typography sx={{ fontWeight: 900, fontSize: 34, color: "#E2E8F0", lineHeight: 1 }}>0{i + 1}</Typography>
+                    <Box sx={{ width: 48, height: 48, borderRadius: 3, bgcolor: "primary.main", color: "primary.contrastText", display: "grid", placeItems: "center" }}>{s.icon}</Box>
+                    <Typography sx={{ fontWeight: 900, fontSize: 34, color: "surface.muted", lineHeight: 1 }}>0{i + 1}</Typography>
                   </Stack>
                   <Typography variant="h6" sx={{ fontWeight: 800 }}>{s.title}</Typography>
                   <Typography color="text.secondary" variant="body2" sx={{ mt: 0.5, lineHeight: 1.6 }}>{s.text}</Typography>
@@ -262,8 +262,8 @@ export default function Home() {
             ["0 ₼", "müştəri üçün haqq"],
           ].map(([value, label]) => (
             <Grid item xs={4} key={label}>
-              <Box sx={{ textAlign: "center", py: { xs: 2, md: 3 }, borderRadius: 4, bgcolor: "#ECFDF5" }}>
-                <Typography sx={{ fontWeight: 900, fontSize: { xs: 26, md: 40 }, color: "primary.dark", lineHeight: 1.1 }}>{value ?? "—"}</Typography>
+              <Box sx={{ textAlign: "center", py: { xs: 2, md: 3 }, borderRadius: 4, bgcolor: "surface.tint" }}>
+                <Typography sx={{ fontWeight: 900, fontSize: { xs: 26, md: 40 }, color: "primary.main", lineHeight: 1.1 }}>{value ?? "—"}</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>{label}</Typography>
               </Box>
             </Grid>
@@ -276,7 +276,7 @@ export default function Home() {
         <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
           <Grid container spacing={4}>
             <Grid item xs={12} md={5}>
-              <Card sx={{ p: { xs: 3, md: 4 }, height: "100%", bgcolor: "primary.main", color: "#fff", border: "none", display: "flex", flexDirection: "column" }}>
+              <Card sx={{ p: { xs: 3, md: 4 }, height: "100%", bgcolor: "primary.dark", color: "#fff", border: "none", display: "flex", flexDirection: "column" }}>
                 <Typography variant="overline" sx={{ color: "secondary.light", fontWeight: 800 }}>Ustalar üçün</Typography>
                 <Typography variant="h5" sx={{ fontWeight: 800 }}>Yaxınlığındakı müştərilər səni gözləyir</Typography>
                 <Stack spacing={1} sx={{ mt: 2, mb: 3, flex: 1 }}>

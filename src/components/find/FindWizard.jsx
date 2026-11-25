@@ -86,7 +86,7 @@ function ServiceStep({ initialText, counts, onPick }) {
                 {matches.map(({ category, reason }, i) => (
                   <ListItemButton key={category} onClick={() => pick(category)} divider={i < matches.length - 1} sx={{ py: 1.25 }}>
                     <ListItemIcon sx={{ minWidth: 44 }}>
-                      <Box sx={{ width: 34, height: 34, borderRadius: 2, bgcolor: "#F0FDFA", color: "primary.main", display: "grid", placeItems: "center", "& svg": { fontSize: 20 } }}>
+                      <Box sx={{ width: 34, height: 34, borderRadius: 2, bgcolor: "surface.tint", color: "primary.main", display: "grid", placeItems: "center", "& svg": { fontSize: 20 } }}>
                         <CategoryIcon category={category} />
                       </Box>
                     </ListItemIcon>
@@ -123,7 +123,7 @@ function ServiceStep({ initialText, counts, onPick }) {
                   border: 1, borderColor: "divider", borderRadius: 3, bgcolor: "background.paper", cursor: "pointer",
                   font: "inherit", fontSize: 13, fontWeight: 500, color: "text.primary", textAlign: "center", lineHeight: 1.25,
                   transition: "border-color .15s, background-color .15s, transform .1s",
-                  "&:hover": { borderColor: "primary.main", bgcolor: "#F0FDFA" },
+                  "&:hover": { borderColor: "primary.main", bgcolor: "surface.tint" },
                   "&:active": { transform: "scale(.97)" },
                   "& svg": { fontSize: 24, color: "primary.main" },
                 }}
@@ -308,7 +308,7 @@ export default function FindWizard({ step, category, problem, counts, onPickCate
     <Box
       sx={{
         position: "absolute", inset: 0, zIndex: 6, overflowY: "auto",
-        bgcolor: "rgba(241,245,249,.72)", backdropFilter: "blur(6px)",
+        bgcolor: "surface.veil", backdropFilter: "blur(6px)",
         display: "flex", justifyContent: "center", alignItems: "flex-start",
         px: { xs: 1.5, md: 2 }, py: { xs: 1.5, md: "7vh" },
       }}

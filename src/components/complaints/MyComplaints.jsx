@@ -27,7 +27,7 @@ export default function MyComplaints() {
             </Stack>
             <Typography variant="caption" color="text.secondary">{formatDate(c.createdAt)}</Typography>
             {c.adminNote && (
-              <Typography variant="body2" sx={{ mt: 0.75, p: 1, bgcolor: "#F1F5F9", borderRadius: 1.5 }}>
+              <Typography variant="body2" sx={{ mt: 0.75, p: 1, bgcolor: "surface.subtle", borderRadius: 1.5 }}>
                 <b>Administratorun cavabı:</b> {c.adminNote}
               </Typography>
             )}

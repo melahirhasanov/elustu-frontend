@@ -24,7 +24,7 @@ export default function MasterPin({ master, selected, online, distance }) {
           height: size,
           borderRadius: "50%",
           bgcolor: selected ? "secondary.main" : "primary.main",
-          color: selected ? "#1F2937" : "#fff",
+          color: selected ? "#1F2937" : "primary.contrastText",
           border: "3px solid #fff",
           display: "grid",
           placeItems: "center",
@@ -45,7 +45,7 @@ export default function MasterPin({ master, selected, online, distance }) {
       <Box
         sx={{
           position: "absolute", right: -4, bottom: 8, width: 20, height: 20, borderRadius: "50%",
-          bgcolor: "#fff", color: "primary.main", display: "grid", placeItems: "center",
+          bgcolor: "background.paper", color: "primary.main", display: "grid", placeItems: "center",
           "& svg": { fontSize: 13 },
         }}
       >
@@ -56,7 +56,7 @@ export default function MasterPin({ master, selected, online, distance }) {
           sx={{
             position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)", mt: 0.25,
             px: 0.75, py: 0.1, borderRadius: 99, whiteSpace: "nowrap",
-            bgcolor: selected ? "secondary.main" : "#fff", color: selected ? "#1F2937" : "text.primary",
+            bgcolor: selected ? "secondary.main" : "background.paper", color: selected ? "#1F2937" : "text.primary",
             fontSize: 11, fontWeight: 700, boxShadow: "0 1px 3px rgba(15,23,42,.25)",
           }}
         >

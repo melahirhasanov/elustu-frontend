@@ -80,7 +80,7 @@ export default function LiveTracking({ order, height = 240 }) {
 
   return (
     <Box sx={{ borderRadius: 3, overflow: "hidden", border: 1, borderColor: "divider" }}>
-      <Stack direction="row" alignItems="center" spacing={1} sx={{ px: 1.5, py: 1, bgcolor: "#FFFBEB" }}>
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ px: 1.5, py: 1, bgcolor: "surface.warm" }}>
         <DirectionsCarFilledIcon sx={{ color: "secondary.dark" }} />
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>

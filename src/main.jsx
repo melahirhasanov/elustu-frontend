@@ -11,8 +11,8 @@ import CallProvider from "./calls/CallProvider";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+      <ThemeProvider theme={theme} defaultMode="system">
+        <CssBaseline enableColorScheme />
         <BrowserRouter>
           <CallProvider>
             <App />

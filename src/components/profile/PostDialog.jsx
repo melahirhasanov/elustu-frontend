@@ -82,7 +82,7 @@ export default function PostDialog({ open, onClose, onCreated }) {
             }}
             sx={{
               border: 2, borderStyle: "dashed", borderColor: file ? "primary.main" : "divider", borderRadius: 3,
-              cursor: "pointer", overflow: "hidden", bgcolor: "#F8FAFC", minHeight: 200,
+              cursor: "pointer", overflow: "hidden", bgcolor: "surface.subtle", minHeight: 200,
               display: "grid", placeItems: "center", textAlign: "center",
             }}
           >

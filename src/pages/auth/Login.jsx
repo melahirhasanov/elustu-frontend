@@ -39,10 +39,10 @@ export default function Login() {
         value={role}
         onChange={(_, v) => setParams(v === "master" ? { rol: "usta" } : {}, { replace: true })}
         variant="fullWidth"
-        sx={{ mb: 3, bgcolor: "#F1F5F9", borderRadius: 2.5, p: 0.5, minHeight: 0, "& .MuiTabs-indicator": { display: "none" } }}
+        sx={{ mb: 3, bgcolor: "surface.subtle", borderRadius: 2.5, p: 0.5, minHeight: 0, "& .MuiTabs-indicator": { display: "none" } }}
       >
         {[["customer", "Müştəri"], ["master", "Usta"]].map(([value, label]) => (
-          <Tab key={value} value={value} label={label} sx={{ minHeight: 40, borderRadius: 2, "&.Mui-selected": { bgcolor: "#fff", boxShadow: "0 1px 3px rgba(15,23,42,.1)" } }} />
+          <Tab key={value} value={value} label={label} sx={{ minHeight: 40, borderRadius: 2, "&.Mui-selected": { bgcolor: "background.paper", boxShadow: "0 1px 3px rgba(15,23,42,.1)" } }} />
         ))}
       </Tabs>
 

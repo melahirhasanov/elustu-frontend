@@ -26,6 +26,7 @@ export default function UserAvatar({ name = "", src, size = 40, sx, ...props }) 
         fontSize: size * 0.4,
         fontWeight: 700,
         bgcolor: colorFor(name),
+        color: "#fff",
         ...sx,
       }}
       {...props}

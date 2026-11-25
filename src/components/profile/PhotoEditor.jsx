@@ -52,7 +52,7 @@ export default function PhotoEditor({ name, src, size = 112, sx, onChange }) {
             disabled={busy}
             onClick={() => inputRef.current?.click()}
             aria-label="Profil şəklini dəyiş"
-            sx={{ position: "absolute", right: 0, bottom: 0, bgcolor: "primary.main", color: "#fff", border: "2px solid #fff", "&:hover": { bgcolor: "primary.dark" } }}
+            sx={{ position: "absolute", right: 0, bottom: 0, bgcolor: "primary.main", color: "primary.contrastText", border: "2px solid #fff", "&:hover": { bgcolor: "primary.dark" } }}
           >
             <PhotoCameraIcon fontSize="small" />
           </IconButton>

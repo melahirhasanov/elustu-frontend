@@ -356,7 +356,7 @@ export default function Messages() {
                             {c.isDraft ? "Yeni söhbət" : `${mineLast ? "Siz: " : ""}${c.lastMessage}`}
                           </Typography>
                           {c.unreadCount > 0 && (
-                            <Box sx={{ minWidth: 20, height: 20, px: 0.75, borderRadius: 99, bgcolor: "primary.main", color: "#fff", fontSize: 12, fontWeight: 700, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                            <Box sx={{ minWidth: 20, height: 20, px: 0.75, borderRadius: 99, bgcolor: "primary.main", color: "primary.contrastText", fontSize: 12, fontWeight: 700, display: "grid", placeItems: "center", flexShrink: 0 }}>
                               {c.unreadCount}
                             </Box>
                           )}
@@ -413,7 +413,7 @@ export default function Messages() {
                       <Fragment key={m._id}>
                         {showDay && (
                           <Box sx={{ textAlign: "center", my: 2 }}>
-                            <Typography variant="caption" sx={{ bgcolor: "#E2E8F0", color: "text.secondary", px: 1.5, py: 0.5, borderRadius: 99 }}>
+                            <Typography variant="caption" sx={{ bgcolor: "surface.muted", color: "text.secondary", px: 1.5, py: 0.5, borderRadius: 99 }}>
                               {formatDay(msgTime(m))}
                             </Typography>
                           </Box>
@@ -428,7 +428,7 @@ export default function Messages() {
                               borderBottomRightRadius: mine ? 6 : 24,
                               borderBottomLeftRadius: mine ? 24 : 6,
                               bgcolor: mine ? "primary.main" : "background.paper",
-                              color: mine ? "#fff" : "text.primary",
+                              color: mine ? "primary.contrastText" : "text.primary",
                               border: mine ? "none" : 1,
                               borderColor: "divider",
                               opacity: m.pending ? 0.7 : 1,
@@ -478,7 +478,7 @@ export default function Messages() {
                     sx={{ "& .MuiOutlinedInput-root": { borderRadius: 3, bgcolor: "background.default" } }}
                   />
                   <IconButton type="submit" color="primary" disabled={!draft.trim()} aria-label="Göndər"
-                    sx={{ bgcolor: "primary.main", color: "#fff", "&:hover": { bgcolor: "primary.dark" }, "&.Mui-disabled": { bgcolor: "#E2E8F0", color: "#94A3B8" }, width: 42, height: 42 }}>
+                    sx={{ bgcolor: "primary.main", color: "primary.contrastText", "&:hover": { bgcolor: "primary.dark" }, "&.Mui-disabled": { bgcolor: "surface.muted", color: "#94A3B8" }, width: 42, height: 42 }}>
                     <SendRoundedIcon fontSize="small" />
                   </IconButton>
                 </Stack>

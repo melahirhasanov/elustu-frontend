@@ -148,7 +148,7 @@ export default function MasterProfileView({ master, isOwner, onEdit, onPhotoChan
                         <Typography variant="caption" color="text.secondary">{available ? "Xəritədə görünürsünüz" : "Xəritədə gizlisiniz"}</Typography>
                       </Box>
                     }
-                    sx={{ mr: 1, px: 1.5, py: 0.5, border: 1, borderColor: available ? "success.light" : "divider", borderRadius: 3, bgcolor: available ? "#F0FDF4" : "transparent" }}
+                    sx={{ mr: 1, px: 1.5, py: 0.5, border: 1, borderColor: available ? "success.light" : "divider", borderRadius: 3, bgcolor: available ? "surface.tint" : "transparent" }}
                   />
                   <Button variant="outlined" startIcon={<EditOutlinedIcon />} onClick={onEdit}>Profili redaktə et</Button>
                   <Button variant="contained" startIcon={<AddPhotoAlternateOutlinedIcon />} onClick={onAddPost}>Paylaşım et</Button>

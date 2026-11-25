@@ -257,7 +257,7 @@ export default function MapHome() {
   // ---------- Hissələr ----------
   const sortBar = (
     <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1.25 }}>
-      <ToggleButtonGroup size="small" exclusive value={sortBy} onChange={(_, v) => v && setSortBy(v)} sx={{ bgcolor: "#fff", "& .MuiToggleButton-root": { py: 0.25, px: 1.25, fontSize: 12.5, whiteSpace: "nowrap" } }}>
+      <ToggleButtonGroup size="small" exclusive value={sortBy} onChange={(_, v) => v && setSortBy(v)} sx={{ bgcolor: "background.paper", "& .MuiToggleButton-root": { py: 0.25, px: 1.25, fontSize: 12.5, whiteSpace: "nowrap" } }}>
         <ToggleButton value="distance">Ən yaxın</ToggleButton>
         <ToggleButton value="rating">Reytinq</ToggleButton>
       </ToggleButtonGroup>
@@ -268,7 +268,7 @@ export default function MapHome() {
         onClick={() => setTopRated((v) => !v)}
         color={topRated ? "secondary" : "default"}
         variant={topRated ? "filled" : "outlined"}
-        sx={{ bgcolor: topRated ? undefined : "#fff" }}
+        sx={{ bgcolor: topRated ? undefined : "background.paper" }}
       />
     </Stack>
   );
@@ -286,7 +286,7 @@ export default function MapHome() {
         "&:hover": { bgcolor: "action.hover" }, "& .edit": { opacity: 0.55 }, "&:hover .edit": { opacity: 1 },
       }}
     >
-      <Box sx={{ width: 30, height: 30, borderRadius: 2, bgcolor: "#F0FDFA", color: "primary.main", display: "grid", placeItems: "center", flexShrink: 0, "& svg": { fontSize: 18 } }}>{icon}</Box>
+      <Box sx={{ width: 30, height: 30, borderRadius: 2, bgcolor: "surface.tint", color: "primary.main", display: "grid", placeItems: "center", flexShrink: 0, "& svg": { fontSize: 18 } }}>{icon}</Box>
       <Typography sx={{ fontWeight: 600, fontSize: 14.5, flex: 1, minWidth: 0 }} noWrap>{label}</Typography>
       <EditOutlinedIcon className="edit" sx={{ fontSize: 17, color: "text.secondary" }} />
     </Box>
@@ -376,7 +376,7 @@ export default function MapHome() {
                   "@keyframes userPulse": { "0%": { boxShadow: "0 0 0 0 rgba(37,99,235,.5)" }, "100%": { boxShadow: "0 0 0 18px rgba(37,99,235,0)" } },
                 }} />
               ) : (
-                <PlaceIcon sx={{ fontSize: 40, color: "#0F172A", filter: "drop-shadow(0 3px 4px rgba(0,0,0,.3))" }} />
+                <PlaceIcon sx={{ fontSize: 40, color: "text.primary", filter: "drop-shadow(0 3px 4px rgba(0,0,0,.3))" }} />
               )}
             </Marker>
           )}
@@ -440,9 +440,9 @@ export default function MapHome() {
             onClick={locate}
             disabled={locating}
             sx={{
-              position: "absolute", zIndex: 2, right: 16, bgcolor: "#fff", color: place?.source === "gps" ? "primary.main" : "text.primary",
+              position: "absolute", zIndex: 2, right: 16, bgcolor: "background.paper", color: place?.source === "gps" ? "primary.main" : "text.primary",
               bottom: { xs: selected ? "auto" : 184, md: 130 }, top: { xs: selected ? 104 : "auto", md: "auto" },
-              "&:hover": { bgcolor: "#F8FAFC" },
+              "&:hover": { bgcolor: "surface.subtle" },
             }}
             aria-label="Mənim yerim"
           >
@@ -514,7 +514,7 @@ export default function MapHome() {
           >
             <Box sx={{ pt: 1, pb: selected ? 0 : 1, flexShrink: 0 }}>
               <Box onClick={() => !selected && setSheetExpanded((v) => !v)} sx={{ cursor: "pointer" }}>
-                <Box sx={{ width: 40, height: 5, borderRadius: 3, bgcolor: "#CBD5E1", mx: "auto" }} />
+                <Box sx={{ width: 40, height: 5, borderRadius: 3, bgcolor: "surface.muted", mx: "auto" }} />
                 {!selected && (
                   <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 2, pt: 1 }}>
                     <Typography variant="subtitle2">{countText}</Typography>

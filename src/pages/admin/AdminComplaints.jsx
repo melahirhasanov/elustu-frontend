@@ -43,7 +43,7 @@ function ComplaintItem({ complaint, onUpdated, onBlockMaster }) {
       </Stack>
 
       <Collapse in={open}>
-        <Typography sx={{ mt: 2, p: 1.5, bgcolor: "#F8FAFC", borderRadius: 2, whiteSpace: "pre-line" }}>{complaint.description}</Typography>
+        <Typography sx={{ mt: 2, p: 1.5, bgcolor: "surface.subtle", borderRadius: 2, whiteSpace: "pre-line" }}>{complaint.description}</Typography>
         {complaint.order && (
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
             Sifariş: {complaint.order.category} — “{complaint.order.description?.slice(0, 80)}” · status: <b>{STATUS[complaint.order.status]?.label}</b>

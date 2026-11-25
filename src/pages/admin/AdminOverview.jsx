@@ -12,7 +12,7 @@ function Stat({ icon, label, value, sub, color = "primary.main", onClick }) {
   return (
     <Card onClick={onClick} sx={{ p: 2.5, height: "100%", cursor: onClick ? "pointer" : "default", "&:hover": onClick ? { borderColor: "primary.light" } : {} }}>
       <Stack direction="row" spacing={2} alignItems="center">
-        <Box sx={{ width: 48, height: 48, borderRadius: 3, bgcolor: "#F1F5F9", color, display: "grid", placeItems: "center" }}>{icon}</Box>
+        <Box sx={{ width: 48, height: 48, borderRadius: 3, bgcolor: "surface.subtle", color, display: "grid", placeItems: "center" }}>{icon}</Box>
         <Box>
           <Typography variant="h5" sx={{ lineHeight: 1.1 }}>{value}</Typography>
           <Typography variant="body2" color="text.secondary">{label}</Typography>
@@ -25,9 +25,11 @@ function Stat({ icon, label, value, sub, color = "primary.main", onClick }) {
 
 export default function AdminOverview({ onNavigate }) {
   const [stats, setStats] = useState(null);
+  const [chart, setChart] = useState([]);
 
   useEffect(() => {
     api.get("/api/admin/stats").then(({ data }) => setStats(data)).catch(() => setStats(false));
+    api.get("/api/admin/chart").then(({ data }) => setChart(data)).catch(() => {});
   }, []);
 
   if (stats === null) return <Grid container spacing={2}>{[0, 1, 2, 3].map((i) => <Grid item xs={12} sm={6} md={3} key={i}><Skeleton variant="rounded" height={96} /></Grid>)}</Grid>;
@@ -36,7 +38,7 @@ export default function AdminOverview({ onNavigate }) {
   const statusOrder = ["pending", "accepted", "on_the_way", "in_progress", "completed", "cancelled", "rejected"];
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={3} useFlexGap>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>
           <Stat icon={<ReportOutlinedIcon />} color="error.main" label="Açıq şikayət" value={stats.complaintsOpen} onClick={() => onNavigate("complaints")} />
@@ -45,7 +47,7 @@ export default function AdminOverview({ onNavigate }) {
           <Stat icon={<AssignmentOutlinedIcon />} label="Sifariş (cəmi)" value={stats.ordersTotal} sub={`Son 7 gün: ${stats.ordersWeek}`} onClick={() => onNavigate("orders")} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Stat icon={<EngineeringOutlinedIcon />} label="Usta" value={stats.masters} sub={`Aktiv: ${stats.availableMasters} · Bloklu: ${stats.blockedMasters}`} onClick={() => onNavigate("masters")} />
+          <Stat icon={<EngineeringOutlinedIcon />} label="Real usta" value={stats.masters} sub={`Aktiv: ${stats.availableMasters} · Bloklu: ${stats.blockedMasters} · Nümunə: ${stats.demoMasters ?? 0}`} onClick={() => onNavigate("masters")} />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <Stat icon={<PeopleOutlineIcon />} label="Müştəri" value={stats.customers} onClick={() => onNavigate("customers")} />
@@ -66,7 +68,7 @@ export default function AdminOverview({ onNavigate }) {
                       <Typography variant="body2">{STATUS[s].label}</Typography>
                       <Typography variant="body2" sx={{ fontWeight: 700 }}>{n}</Typography>
                     </Stack>
-                    <LinearProgress variant="determinate" value={pct} sx={{ height: 8, borderRadius: 4, bgcolor: "#EEF2F6" }} />
+                    <LinearProgress variant="determinate" value={pct} sx={{ height: 8, borderRadius: 4, bgcolor: "surface.subtle" }} />
                   </Box>
                 );
               })}
@@ -84,6 +86,20 @@ export default function AdminOverview({ onNavigate }) {
           </Card>
         </Grid>
       </Grid>
+      {chart.length > 0 && (
+        <Card sx={{ p: 3 }}>
+          <Typography variant="h6">Sifarişlər, son 14 gün</Typography>
+          <Stack direction="row" alignItems="flex-end" spacing={0.75} sx={{ height: 150, mt: 2 }}>
+            {chart.map((d) => (
+              <Stack key={d.date} alignItems="center" justifyContent="flex-end" sx={{ flex: 1, height: "100%", minWidth: 0 }} title={`${d.date}: ${d.count} sifariş`}>
+                <Typography variant="caption" sx={{ fontWeight: 700 }}>{d.count || ""}</Typography>
+                <Box sx={{ width: "100%", maxWidth: 34, height: `${(d.count / Math.max(1, ...chart.map((x) => x.count))) * 65}%`, minHeight: 3, bgcolor: d.count ? "primary.main" : "surface.muted", borderRadius: "4px 4px 0 0" }} />
+                <Typography variant="caption" color="text.secondary">{d.date.slice(8)}</Typography>
+              </Stack>
+            ))}
+          </Stack>
+        </Card>
+      )}
     </Stack>
   );
 }

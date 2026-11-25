@@ -37,7 +37,7 @@ export default function OrderCard({ order, role, online, onChanged, onReview }) 
   // Qarşı tərəf: usta üçün müştəri, müştəri üçün usta
   const other = isMaster
     ? { id: order.customer.email, name: order.customer.name, sub: "Müştəri" }
-    : { id: master._id, name: `${master.name || ""} ${master.surname || ""}`.trim(), sub: order.category };
+    : { id: master._id, name: order.master ? `${master.name || ""} ${master.surname || ""}`.trim() : "Usta hesabı silinib", sub: order.category };
   const roomId = `${order.customer.email}_${master._id}`;
   const actions = ACTIONS[role]?.[order.status] || [];
   const finished = ["rejected", "cancelled"].includes(order.status);
@@ -104,7 +104,7 @@ export default function OrderCard({ order, role, online, onChanged, onReview }) 
           )}
         </Stack>
         {order.masterNote && (
-          <Typography variant="body2" sx={{ mt: 1, p: 1.25, bgcolor: "#F1F5F9", borderRadius: 2 }}>
+          <Typography variant="body2" sx={{ mt: 1, p: 1.25, bgcolor: "surface.subtle", borderRadius: 2 }}>
             <b>Ustanın qeydi:</b> {order.masterNote}
           </Typography>
         )}
@@ -137,12 +137,14 @@ export default function OrderCard({ order, role, online, onChanged, onReview }) 
             <Button variant="contained" color="secondary" size="small" onClick={() => onReview(order)}>Rəy yaz</Button>
           )}
           <Box sx={{ flex: 1 }} />
-          <Tooltip title="Problem bildir (şikayət)">
-            <IconButton onClick={() => setComplaintOpen(true)} sx={{ color: "text.secondary" }}>
-              <ReportOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-          {!finished && (
+          {other.id && (
+            <Tooltip title="Problem bildir (şikayət)">
+              <IconButton onClick={() => setComplaintOpen(true)} sx={{ color: "text.secondary" }}>
+                <ReportOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+          {!finished && other.id && (
             <>
               <Tooltip title="Mesaj yaz">
                 <IconButton component={RouterLink} to={isMaster ? `/mesajlar?otaq=${encodeURIComponent(roomId)}` : `/mesajlar?usta=${master._id}`} color="primary">

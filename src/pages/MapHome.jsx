@@ -106,7 +106,7 @@ export default function MapHome() {
   const counts = useMemo(() => {
     if (!masters) return null;
     const result = {};
-    masters.filter((m) => m.isAvailable !== false && !m.isBusy && masterLatLng(m)).forEach((m) => {
+    masters.filter((m) => !m.isDemo && m.isAvailable !== false && !m.isBusy && masterLatLng(m)).forEach((m) => {
       result[m.category] = (result[m.category] || 0) + 1;
     });
     return result;
@@ -153,9 +153,9 @@ export default function MapHome() {
       .filter((r) => r.distance <= MAX_DISTANCE_KM)
       .filter((r) => !topRated || (r.master.ratingCount > 0 && r.master.ratingAvg >= 4))
       .sort((a, b) =>
-        sortBy === "rating"
+        Number(Boolean(a.master.isDemo)) - Number(Boolean(b.master.isDemo)) || (sortBy === "rating"
           ? (b.master.ratingAvg || 0) - (a.master.ratingAvg || 0) || (b.master.ratingCount || 0) - (a.master.ratingCount || 0) || a.distance - b.distance
-          : a.distance - b.distance
+          : a.distance - b.distance)
       );
   }, [candidates, road, roadKey, topRated, sortBy]);
 
@@ -336,7 +336,7 @@ export default function MapHome() {
 
   const countText = !masters
     ? "Yüklənir..."
-    : `${rows.length} aktiv usta · ${MAX_DISTANCE_KM} km radius${road.loading ? " · hesablanır..." : ""}`;
+    : `${rows.filter((r) => !r.master.isDemo).length} aktiv usta${rows.some((r) => r.master.isDemo) ? ` + ${rows.filter((r) => r.master.isDemo).length} nümunə` : ""} · ${MAX_DISTANCE_KM} km radius${road.loading ? " · hesablanır..." : ""}`;
 
   // Sifariş formasına ötürülən ünvan: yalnız istifadəçinin özünün seçdiyi konkret ünvan
   const orderAddress = place && ["search", "recent"].includes(place.source) ? place.title : "";

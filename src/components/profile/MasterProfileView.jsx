@@ -22,6 +22,8 @@ import useOnlineIds from "../../hooks/useOnlineIds";
 import ComplaintDialog from "../complaints/ComplaintDialog";
 import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 import api from "../../api/client";
+import DemoChip from "../DemoChip";
+import PhotoEditor from "./PhotoEditor";
 import UserAvatar from "../UserAvatar";
 import CategoryIcon from "../CategoryIcon";
 import EmptyState from "../EmptyState";
@@ -40,7 +42,7 @@ function InfoRow({ icon, children }) {
 }
 
 // Usta profilinin ortaq görünüşü: ictimai səhifə (isOwner=false) və "Profilim" (isOwner=true)
-export default function MasterProfileView({ master, isOwner, onEdit, onAddPost, postsVersion = 0 }) {
+export default function MasterProfileView({ master, isOwner, onEdit, onPhotoChange, onAddPost, postsVersion = 0 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, role } = useSelector((s) => s.auth);
@@ -113,14 +115,18 @@ export default function MasterProfileView({ master, isOwner, onEdit, onAddPost, 
       <Container maxWidth="lg" sx={{ mt: { xs: -7, md: -9 }, pb: 6 }}>
         <Card sx={{ p: { xs: 2.5, md: 3.5 }, mb: 3 }}>
           <Stack direction={{ xs: "column", md: "row" }} spacing={3} alignItems={{ md: "flex-end" }}>
-            <UserAvatar name={fullName} size={112} sx={{ border: "4px solid #fff", boxShadow: "0 8px 24px rgba(15,23,42,.15)", mt: { md: -8 } }} />
+            {isOwner ? (
+              <PhotoEditor name={fullName} src={master.profileImage} onChange={onPhotoChange} sx={{ mt: { md: -8 } }} />
+            ) : (
+              <UserAvatar name={fullName} src={master.profileImage} size={112} sx={{ border: "4px solid #fff", boxShadow: "0 8px 24px rgba(15,23,42,.15)", mt: { md: -8 } }} />
+            )}
             <Box sx={{ flex: 1, minWidth: 0 }}>
               <Typography variant="h4">{fullName}</Typography>
               <Stack direction="row" spacing={1} alignItems="center" sx={{ color: "primary.main", mt: 0.5 }}>
                 <CategoryIcon category={master.category} fontSize="small" />
                 <Typography sx={{ fontWeight: 600 }}>{master.category}</Typography>
               </Stack>
-              <Box sx={{ mt: 0.75 }}><RatingBadge master={master} size="medium" /></Box>
+              <Box sx={{ mt: 0.75 }}>{master.isDemo ? <DemoChip /> : <RatingBadge master={master} size="medium" />}</Box>
               <Stack direction="row" spacing={1} sx={{ mt: 1.5 }} flexWrap="wrap" useFlexGap>
                 <Chip size="small" icon={<PlaceOutlinedIcon />} label={master.city} variant="outlined" />
                 {master.experience > 0 && <Chip size="small" icon={<WorkHistoryOutlinedIcon />} label={`${master.experience} il təcrübə`} variant="outlined" />}
@@ -147,6 +153,8 @@ export default function MasterProfileView({ master, isOwner, onEdit, onAddPost, 
                   <Button variant="outlined" startIcon={<EditOutlinedIcon />} onClick={onEdit}>Profili redaktə et</Button>
                   <Button variant="contained" startIcon={<AddPhotoAlternateOutlinedIcon />} onClick={onAddPost}>Paylaşım et</Button>
                 </>
+              ) : master.isDemo ? (
+                <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 260 }}>Bu profil nümunədir: sifariş, mesaj və zəng qəbul etmir.</Typography>
               ) : (
                 <>
                   <Box sx={{ "& > span, & button": { width: "100%" } }}>

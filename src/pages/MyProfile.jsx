@@ -10,7 +10,7 @@ import { selectDisplayName, updateUser } from "../store/authSlice";
 import MasterProfileView from "../components/profile/MasterProfileView";
 import EditProfileDialog from "../components/profile/EditProfileDialog";
 import PostDialog from "../components/profile/PostDialog";
-import UserAvatar from "../components/UserAvatar";
+import PhotoEditor from "../components/profile/PhotoEditor";
 import MyComplaints from "../components/complaints/MyComplaints";
 
 function CustomerProfile() {
@@ -19,7 +19,7 @@ function CustomerProfile() {
   return (
     <Container maxWidth="sm" sx={{ py: 6 }}>
       <Card sx={{ p: 4, textAlign: "center" }}>
-        <UserAvatar name={name} size={88} sx={{ mx: "auto", mb: 2 }} />
+        <PhotoEditor name={name} src={user.profileImage} size={96} sx={{ mx: "auto", mb: 2 }} />
         <Typography variant="h5">{name}</Typography>
         <Stack direction="row" spacing={1} justifyContent="center" alignItems="center" sx={{ color: "text.secondary", mt: 0.5 }}>
           <MailOutlineIcon fontSize="small" />
@@ -60,6 +60,7 @@ function OwnMasterProfile() {
       <MasterProfileView
         master={master}
         isOwner
+        onPhotoChange={(profileImage) => setMaster((m) => ({ ...m, profileImage }))}
         onEdit={() => setEditOpen(true)}
         onAddPost={() => setPostOpen(true)}
         postsVersion={postsVersion}

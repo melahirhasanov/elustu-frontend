@@ -78,7 +78,8 @@ export default function Masters() {
       const pos = masterLatLng(m);
       return { master: m, distance: userPosition && pos ? distanceKm(userPosition, pos) : null };
     });
-    if (userPosition) list.sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
+    // Nümunə profillər həmişə real ustalardan sonra
+    list.sort((a, b) => Number(Boolean(a.master.isDemo)) - Number(Boolean(b.master.isDemo)) || (userPosition ? (a.distance ?? Infinity) - (b.distance ?? Infinity) : 0));
     return list;
   }, [masters, userPosition]);
 
@@ -119,7 +120,7 @@ export default function Masters() {
         <Box>
           <Typography variant="h4">Ustalar</Typography>
           <Typography color="text.secondary">
-            {masters ? `${masters.length} usta tapıldı` : "Yüklənir..."}
+            {masters ? `${masters.filter((m) => !m.isDemo).length} usta tapıldı${masters.some((m) => m.isDemo) ? ` + ${masters.filter((m) => m.isDemo).length} nümunə` : ""}` : "Yüklənir..."}
             {userPosition && " · yaxınlığa görə sıralanıb"}
           </Typography>
         </Box>

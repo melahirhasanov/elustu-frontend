@@ -105,7 +105,7 @@ export default function Header() {
               <Button
                 onClick={(e) => setMenuAnchor(e.currentTarget)}
                 sx={{ color: "text.primary", pl: 0.5, pr: 1, borderRadius: 99 }}
-                startIcon={<UserAvatar name={displayName} size={32} />}
+                startIcon={<UserAvatar name={displayName} src={user.profileImage} size={32} />}
               >
                 <Box component="span" sx={{ display: { xs: "none", sm: "inline" }, maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {displayName}

@@ -52,11 +52,12 @@ function useStats() {
   }, []);
   return useMemo(() => {
     if (!masters) return null;
-    const active = masters.filter((m) => m.isAvailable !== false);
+    const real = masters.filter((m) => !m.isDemo); // nümunə profillər sayılmır
+    const active = real.filter((m) => m.isAvailable !== false);
     const counts = {};
     active.forEach((m) => (counts[m.category] = (counts[m.category] || 0) + 1));
     return {
-      masters: masters.length,
+      masters: real.length,
       active: active.length,
       counts,
     };

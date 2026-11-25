@@ -68,7 +68,7 @@ export default function OrderCard({ order, role, online, onChanged, onReview }) 
     <Card sx={{ overflow: "visible" }}>
       <Box sx={{ p: { xs: 2, sm: 2.5 } }}>
         <Stack direction="row" spacing={1.5} alignItems="flex-start">
-          <UserAvatar name={other.name} size={48} />
+          <UserAvatar name={other.name} src={isMaster ? undefined : master.profileImage} size={48} />
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap" useFlexGap>
               <Typography variant="subtitle1" noWrap>{other.name}</Typography>

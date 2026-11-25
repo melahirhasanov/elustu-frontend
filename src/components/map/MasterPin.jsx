@@ -33,7 +33,11 @@ export default function MasterPin({ master, selected, online, distance }) {
           transition: "all .15s",
         }}
       >
-        {initials(`${master.name} ${master.surname}`)}
+        {master.profileImage ? (
+          <Box component="img" src={master.profileImage} alt="" sx={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+        ) : (
+          initials(`${master.name} ${master.surname}`)
+        )}
       </Box>
       {/* Aşağı ox */}
       <Box sx={{ width: 0, height: 0, mx: "auto", mt: "-2px", borderLeft: "7px solid transparent", borderRight: "7px solid transparent", borderTop: "9px solid #fff" }} />

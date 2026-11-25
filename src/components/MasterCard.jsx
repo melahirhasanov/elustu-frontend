@@ -3,6 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import NearMeOutlinedIcon from "@mui/icons-material/NearMeOutlined";
+import DemoChip from "./DemoChip";
 import UserAvatar from "./UserAvatar";
 import CategoryIcon from "./CategoryIcon";
 import { formatDistance } from "./map/mapUtils";
@@ -24,7 +25,7 @@ export default function MasterCard({ master, distance, selected, onHover }) {
     >
       <CardActionArea component={RouterLink} to={`/usta/${master._id}`} sx={{ p: 2 }}>
         <Stack direction="row" spacing={2} alignItems="center">
-          <UserAvatar name={fullName} size={52} />
+          <UserAvatar name={fullName} src={master.profileImage} size={52} />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography variant="subtitle1" noWrap>
               {fullName}
@@ -35,7 +36,7 @@ export default function MasterCard({ master, distance, selected, onHover }) {
                 {master.category}
               </Typography>
             </Stack>
-            <RatingBadge master={master} />
+            {master.isDemo ? <DemoChip /> : <RatingBadge master={master} />}
           </Box>
         </Stack>
 
@@ -58,12 +59,12 @@ export default function MasterCard({ master, distance, selected, onHover }) {
       <Box sx={{ px: 2, pb: 2 }}>
         <Button
           component={RouterLink}
-          to={`/mesajlar?usta=${master._id}`}
-          variant="contained"
+          to={master.isDemo ? `/usta/${master._id}` : `/mesajlar?usta=${master._id}`}
+          variant={master.isDemo ? "outlined" : "contained"}
           fullWidth
-          startIcon={<ChatBubbleOutlineIcon />}
+          startIcon={master.isDemo ? undefined : <ChatBubbleOutlineIcon />}
         >
-          Mesaj yaz
+          {master.isDemo ? "Profilə bax" : "Mesaj yaz"}
         </Button>
       </Box>
     </Card>

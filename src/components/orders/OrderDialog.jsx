@@ -69,7 +69,7 @@ export default function OrderDialog({ open, master, onClose, initialPosition, in
       <DialogContent dividers>
         <Stack spacing={2.25}>
           <Stack direction="row" spacing={1.5} alignItems="center" sx={{ p: 1.5, bgcolor: "#F1F5F9", borderRadius: 3 }}>
-            <UserAvatar name={fullName} size={44} />
+            <UserAvatar name={fullName} src={master.profileImage} size={44} />
             <Box>
               <Typography variant="subtitle2">{fullName}</Typography>
               <Typography variant="body2" color="text.secondary">{master.category}</Typography>

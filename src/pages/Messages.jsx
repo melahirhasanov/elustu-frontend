@@ -192,7 +192,7 @@ export default function Messages() {
         (prev || []).some((c) => c.roomId === roomId)
           ? prev
           : [
-              { roomId, isDraft: true, user: { _id: data._id, name: `${data.name} ${data.surname}`, category: data.category }, lastMessage: "", unreadCount: 0 },
+              { roomId, isDraft: true, user: { _id: data._id, name: `${data.name} ${data.surname}`, category: data.category, profileImage: data.profileImage }, lastMessage: "", unreadCount: 0 },
               ...(prev || []),
             ]
       );
@@ -344,7 +344,7 @@ export default function Messages() {
                       sx={{ px: 2, py: 1.5, gap: 1.5, borderBottom: 1, borderColor: "divider", "&.Mui-selected": { bgcolor: "rgba(15,118,110,.08)" } }}
                     >
                       <Badge overlap="circular" variant="dot" invisible={!online} color="success" anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-                        <UserAvatar name={c.user?.name} size={46} />
+                        <UserAvatar name={c.user?.name} src={c.user?.profileImage} size={46} />
                       </Badge>
                       <Box sx={{ flex: 1, minWidth: 0 }}>
                         <Stack direction="row" justifyContent="space-between" alignItems="baseline" spacing={1}>
@@ -384,7 +384,7 @@ export default function Messages() {
                 {isMobile && (
                   <IconButton onClick={() => setActiveRoom(null)} aria-label="Geri"><ArrowBackIcon /></IconButton>
                 )}
-                <UserAvatar name={active.user?.name} size={40} />
+                <UserAvatar name={active.user?.name} src={active.user?.profileImage} size={40} />
                 <Box sx={{ flex: 1, minWidth: 0 }}>
                   <Typography variant="subtitle1" noWrap>{active.user?.name}</Typography>
                   <Typography variant="caption" color={partnerTyping ? "primary.main" : partnerOnline ? "success.main" : "text.secondary"}>

@@ -9,6 +9,7 @@ import WorkHistoryOutlinedIcon from "@mui/icons-material/WorkHistoryOutlined";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import DemoChip from "../DemoChip";
 import UserAvatar from "../UserAvatar";
 import CategoryIcon from "../CategoryIcon";
 import RatingBadge from "../RatingBadge";
@@ -40,7 +41,7 @@ export default function MasterDetail({ master, distance, duration, isRoad, onlin
       <Stack direction="row" spacing={2} alignItems="center">
         <Badge overlap="circular" variant="dot" invisible={!online} color="success" anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           sx={{ "& .MuiBadge-dot": { width: 14, height: 14, borderRadius: "50%", border: "2px solid #fff" } }}>
-          <UserAvatar name={fullName} size={64} />
+          <UserAvatar name={fullName} src={master.profileImage} size={64} />
         </Badge>
         <Box sx={{ minWidth: 0 }}>
           <Typography variant="h6" sx={{ lineHeight: 1.2 }}>{fullName}</Typography>
@@ -48,7 +49,7 @@ export default function MasterDetail({ master, distance, duration, isRoad, onlin
             <CategoryIcon category={master.category} sx={{ fontSize: 18 }} />
             <Typography variant="body2" sx={{ fontWeight: 600 }}>{master.category}</Typography>
           </Stack>
-          <Box sx={{ mt: 0.5 }}><RatingBadge master={master} /></Box>
+          <Box sx={{ mt: 0.5 }}>{master.isDemo ? <DemoChip /> : <RatingBadge master={master} />}</Box>
         </Box>
       </Stack>
 
@@ -74,7 +75,7 @@ export default function MasterDetail({ master, distance, duration, isRoad, onlin
         </Typography>
       )}
 
-      {!isSelf && (
+      {!isSelf && !master.isDemo && (
         <Stack spacing={1} sx={{ mt: 2.5 }}>
           {canOrder && (
             <Button variant="contained" size="large" startIcon={<AssignmentOutlinedIcon />} onClick={order}>
@@ -116,7 +117,7 @@ export function MasterRow({ master, distance, duration, online, selected, onClic
       }}
     >
       <Badge overlap="circular" variant="dot" invisible={!online} color="success" anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-        <UserAvatar name={fullName} size={44} />
+        <UserAvatar name={fullName} src={master.profileImage} size={44} />
       </Badge>
       <Box sx={{ flex: 1, minWidth: 0 }}>
         <Stack direction="row" justifyContent="space-between" spacing={1}>
@@ -129,7 +130,7 @@ export function MasterRow({ master, distance, duration, online, selected, onClic
         </Stack>
         <Stack direction="row" justifyContent="space-between" spacing={1} alignItems="center">
           <Typography variant="body2" color="text.secondary" noWrap>{master.category} · {master.city}</Typography>
-          <RatingBadge master={master} showCount={false} />
+          {master.isDemo ? <DemoChip /> : <RatingBadge master={master} showCount={false} />}
         </Stack>
       </Box>
     </Box>

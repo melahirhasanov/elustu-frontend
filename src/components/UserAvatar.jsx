@@ -15,9 +15,11 @@ function colorFor(name = "") {
   return COLORS[hash % COLORS.length];
 }
 
-export default function UserAvatar({ name = "", size = 40, sx, ...props }) {
+export default function UserAvatar({ name = "", src, size = 40, sx, ...props }) {
   return (
     <Avatar
+      src={src || undefined}
+      alt={name}
       sx={{
         width: size,
         height: size,

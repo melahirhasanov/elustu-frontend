@@ -15,7 +15,7 @@ const page = (path, title, description, body) => {
     .replace(/(<meta property="og:description" content=")[^"]*"/, `$1${esc(description)}"`)
     .replace(/(<link rel="canonical" href=")[^"]*"/, `$1${SITE_URL}${path}"`)
     .replace(/(<meta property="og:url" content=")[^"]*"/, `$1${SITE_URL}${path}"`)
-    .replace(/<!--SEO_STATIC-->[\s\S]*<!--\/SEO_STATIC-->/, `<!--SEO_STATIC--><main style="max-width:880px;margin:0 auto;padding:48px 16px;font-family:Inter,Arial,sans-serif">${body}</main><!--/SEO_STATIC-->`);
+    .replace(/<!--SEO_STATIC-->[\s\S]*<!--\/SEO_STATIC-->/, `<!--SEO_STATIC--><main class="seo-static">${body}</main><!--/SEO_STATIC-->`);
   if (!html.includes(`<title>${esc(title)}</title>`)) throw new Error("Başlıq dəyişmədi: " + path);
   // "/xidmetler/santexnik" -> dist/xidmetler/santexnik.html: Netlify sonuna "/" əlavə edib yönləndirmir
   const file = "dist" + path + ".html";

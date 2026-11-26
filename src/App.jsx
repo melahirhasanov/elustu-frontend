@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
+import usePageMeta from "./hooks/usePageMeta";
 import { Box, CircularProgress } from "@mui/material";
 import MainLayout from "./layouts/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -17,6 +18,7 @@ const Register = lazy(() => import("./pages/auth/Register"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Services = lazy(() => import("./pages/Services"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
 const AdminPanel = lazy(() => import("./pages/admin/AdminPanel"));
 
@@ -34,14 +36,36 @@ function LegacyMasterRedirect() {
   return <Navigate to={`/usta/${id}`} replace />;
 }
 
+// Sabit səhifələrin başlıqları. /usta/:id və /xidmetler öz başlıqlarını özləri qoyur.
+const META = {
+  "/": { path: "/" },
+  "/tap": { title: "Usta tap — xəritədə yaxınlıqdakı ustalar | Əlüstü", path: "/tap" },
+  "/ustalar": { title: "Ustalar — Bakıda santexnik, elektrikçi, kombi ustası | Əlüstü", path: "/ustalar" },
+  "/qeydiyyat": { title: "Qeydiyyat — usta kimi qoşul | Əlüstü", path: "/qeydiyyat" },
+  "/giris": { title: "Daxil ol | Əlüstü", path: "/giris" },
+};
+const OWN_META = /^\/(usta\/|xidmetler)/;
+
+function RouteMeta() {
+  const { pathname } = useLocation();
+  const own = OWN_META.test(pathname);
+  const meta = META[pathname];
+  // Şəxsi və texniki səhifələr axtarışa düşməsin
+  usePageMeta(own ? null : meta ? meta : { title: "Əlüstü", noindex: true });
+  return null;
+}
+
 export default function App() {
   return (
     <Suspense fallback={<Loading />}>
+      <RouteMeta />
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="haqqimizda" element={<Navigate to="/#nece-isleyir" replace />} />
           <Route path="ustalar" element={<Masters />} />
+          <Route path="xidmetler" element={<Services />} />
+          <Route path="xidmetler/:slug" element={<Services />} />
           <Route path="usta/:id" element={<MasterProfile />} />
           <Route path="giris" element={<Login />} />
           <Route path="qeydiyyat" element={<Register />} />

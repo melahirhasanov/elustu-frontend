@@ -1,10 +1,14 @@
 import { Box, Container, Link, Stack, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { Logo } from "./Header";
+import { SERVICES } from "../constants/seo";
+
+const POPULAR = SERVICES.filter((s) => s.popular);
 
 const LINKS = [
   { label: "Usta tap", to: "/tap" },
   { label: "Ustalar", to: "/ustalar" },
+  { label: "Xidmətlər", to: "/xidmetler" },
   { label: "Necə işləyir?", to: "/#nece-isleyir" },
   { label: "Usta kimi qoşul", to: "/qeydiyyat?rol=usta" },
   { label: "Daxil ol", to: "/giris" },
@@ -28,6 +32,13 @@ export default function Footer() {
               </Link>
             ))}
           </Stack>
+        </Stack>
+        <Stack component="nav" aria-label="Populyar xidmətlər" direction="row" spacing={2} flexWrap="wrap" useFlexGap sx={{ mt: 3 }}>
+          {POPULAR.map((s) => (
+            <Link key={s.slug} component={RouterLink} to={`/xidmetler/${s.slug}`} underline="hover" color="text.secondary" variant="caption">
+              {s.name} Bakıda
+            </Link>
+          ))}
         </Stack>
         <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 3 }}>
           © {new Date().getFullYear()} Əlüstü

@@ -9,7 +9,7 @@ const SWITCHES = [
   ["registrationEnabled", "Yeni qeydiyyat", "Söndürülsə, yeni usta və müştəri qeydiyyatdan keçə bilməz"],
   ["showDemo", "Nümunə profillər", "Söndürülsə, nümunələr saytda görünmür (bazada qalır)"],
 ];
-const MAIL = { brevo: "Brevo (HTTPS) ilə göndərilir.", smtp: "Gmail SMTP. Render-in pulsuz planında bu işləmir, BREVO_API_KEY lazımdır." };
+const MAIL = { nodemailer: "Nodemailer (SMTP, port 2525) ilə göndərilir.", brevo: "Brevo (HTTPS) ilə göndərilir.", smtp: "Gmail SMTP. Render-in pulsuz planında bu işləmir, BREVO_API_KEY lazımdır." };
 
 export default function AdminSettings() {
   const dispatch = useDispatch();
